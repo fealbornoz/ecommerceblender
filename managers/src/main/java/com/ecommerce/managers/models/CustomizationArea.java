@@ -9,22 +9,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 
-
-
 @Entity
-@Table(name = "possible_customization")
-public class PossibleCustomization {
+@Table(name = "customization_area")
+public class CustomizationArea {
+    
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private Boolean isMandatory;
+    private String name;
 
-    private List<CustomizationArea> customizationAreas;
+    private List<CustomizationType> customizationTypes;
 
-
+    
 }
-
-
-
