@@ -28,6 +28,15 @@ public class PossibleCustomization {
     @JoinColumn(name = "customization_area_id", referencedColumnName = "id")
     private List<CustomizationArea> customizationAreas;
 
+
+    
+    
+ /*    // Esto se obtiene dependiendo si hay un customizationArea seleccionado
+    // Si hay un customizationArea seleccionado, se obtiene el customizationType
+    @OneToMany
+    @JoinColumn(name = "customization_type_id", referencedColumnName = "id")
+    private List<CustomizationType> customizationTypes; */
+
 }
 
 

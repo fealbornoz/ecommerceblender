@@ -20,11 +20,11 @@ public class CustomizationArea {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @JoinColumn(name = "name")
+    @JoinColumn(name = "name", columnDefinition = "VARCHAR(50)")
     private String name;
 
     @OneToMany
-    @JoinColumn(name = "customization_area_id", referencedColumnName = "id")
+    @JoinColumn(name = "customization_type_id", referencedColumnName = "id")
     private List<CustomizationType> customizationTypes;
 
     

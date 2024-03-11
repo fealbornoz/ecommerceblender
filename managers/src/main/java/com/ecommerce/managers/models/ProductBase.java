@@ -1,6 +1,8 @@
 package com.ecommerce.managers.models;
 
 
+import java.util.Set;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,9 +32,21 @@ public class ProductBase {
     @Column(name = "isActive")
     private Boolean isActive;
 
-    @OneToOne
-    @JoinColumn(name = "possible_customizations_id", referencedColumnName = "id")
-    private PossibleCustomization possibleCustomizations;
+    // Crea una tabla intermedia para la relación muchos a muchos de productBase y possibleCustomization
+    // Aunque no se especifique el nombre de la tabla intermedia, se crea una tabla con el nombre de ambas tablas
+    // Lo hago para que quede más claro
+    @ManyToMany
+    @JoinTable(
+        name = "product_base_possible_customization",
+        joinColumns = @JoinColumn(name = "product_base_id"),
+        inverseJoinColumns = @JoinColumn(name = "possible_customization_id")
+    )
+    private Set<PossibleCustomization> possibleCustomizations;
 
 
+
+    // Acá hay bidireccionalidad
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "gestorId", referencedColumnName = "id")
+    private Manager manager;
 }
