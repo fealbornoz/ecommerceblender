@@ -9,7 +9,7 @@ public class Personalization {
     private Integer id;
 
 
-    @Column(name = "name")
+    @Column(name = "name", columnDefinition = "VARCHAR()")
     private String name;
 
 
@@ -18,20 +18,15 @@ public class Personalization {
 
 
 
-
-
-
-
     // Esto hace referencia a la tabla possible_customizations del microservicio managers
-    @Column(name = "possible_customizations")
+    @Column(name = "possible_customization")
     private String possibleCustomization;
 
 
 
-
     // Esto hace que tengamos bidireccionalidad
-    @OneToOne(optional = false)
-    @JoinColumn(name = "producto_final_id",  referencedColumnName = "id ")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "final_product_id",  referencedColumnName = "id ")
     private FinalProduct finalProduct;
     
 }

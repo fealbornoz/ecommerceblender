@@ -15,7 +15,7 @@ public class PaymentMethods {
     private Integer id;
 
 
-    @Column(name="name")
+    @Column(name="name", columnDefinition = "VARCHAR(20)")
     private String name;
 
 

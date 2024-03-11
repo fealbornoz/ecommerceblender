@@ -16,19 +16,13 @@ public class FinalProduct {
 
 
 
-    @Column(name = "isActive")
-    private Boolean isActive;
-
-
-
-
     @OneToOne(mappedBy = "final_product")
     private Personalization personalizations;
 
 
     // Esto corresponde a la tabla de product_base, que se encuentra en el microservicio de managers
     @Column(name = "product_base_id")
-    private Long productBase;
+    private Integer productBase;
 
     // Esto corresponde a la tabla de product_base, que se encuentra en el microservicio de managers
     @Column(name = "price_base")
@@ -40,7 +34,7 @@ public class FinalProduct {
 
     // Esto es bidireccionaldiad
     @ManyToOne(optional = false)
-    @JoinColumn(name = "vendedor_id", referencedColumnName = "id")
+    @JoinColumn(name = "seller_id", referencedColumnName = "id")
     private Seller seller;
 
 }

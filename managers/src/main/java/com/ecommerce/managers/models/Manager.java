@@ -17,7 +17,7 @@ public class Manager {
     @Column(name = "name", columnDefinition = "VARCHAR(15)")
     private String name;
 
-    @Column(name = "lastName", columnDefinition = "VARCHAR(50)") 
+    @Column(name = "lastName", columnDefinition = "VARCHAR(15)") 
     private String lastName;
     
     @OneToMany

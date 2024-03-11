@@ -20,10 +20,6 @@ public class Seller {
     @OneToMany(mappedBy = "seller")
     private Set<PaymentMethods> paymentMethods;
 
-    //Si bien los productos finales, están dentro de una tienda, para poder hacer consultas más rápidas,
-    //también los guardo acá
-    @OneToMany(mappedBy = "vendedor")
-    private List<FinalProduct> finalProducts;
 
     //Por ahora hago que tenga sólo una tienda, pero en el futuro puede tener más
     @OneToOne(fetch = FetchType.LAZY,  cascade = CascadeType.ALL)
@@ -31,5 +27,13 @@ public class Seller {
     private Store store;
 
     
+
+    //Si bien los productos finales, están dentro de una tienda, para poder hacer consultas más rápidas,
+    //también los guardo acá
+    @OneToMany(mappedBy = "seller")
+    private List<FinalProduct> finalProducts;
+
+    @OneToMany(mappedBy = "seller")
+    private List<Sales> sales;
 
 }

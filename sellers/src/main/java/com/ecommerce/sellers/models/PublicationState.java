@@ -1,7 +1,8 @@
 package com.ecommerce.sellers.models;
 
 public enum PublicationState {
-    ACTiVATED,
+    ACTIVATED,
     PAUSED,
-    PUBLISHED
+    PUBLISHED,
+    FINISHED
 }
