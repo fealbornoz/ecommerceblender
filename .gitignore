@@ -2,4 +2,6 @@
 /index.txt
 /.vscode
 /target
-/env
+/buyers.env
+/managers.env
+/sellers.env
