@@ -1,0 +1,55 @@
+version: '3'
+services:
+  ### PotsgreSQL database for managers
+  managers-db:
+    image: postgres:latest
+    container_name: buyers-db
+    env_file:
+    - managers.env
+    ###environment:
+    ### POSTGRES_USER: postgres
+    ### POSTGRES_PASSWORD: inventory
+    ### POSTGRES_DB: inventory
+    ports:
+      - "5432:5432"
+    volumes:
+      - managers-db:/var/lib/postgresql/data
+    networks:
+      - managers-network
+
+
+  ### PostgreSQL database for sellers
+  sellers-db:
+    image: postgres:latest
+    container_name: sellers-db
+    env_file:
+    - sellers.env
+    ###environment:
+    ### POSTGRES_USER: postgres
+    ### POSTGRES_PASSWORD: inventory
+    ### POSTGRES_DB: inventory
+    ports:
+      - "5433:5432"
+    volumes:
+      - inventory-db:/var/lib/postgresql/data
+    networks:
+      - inventory-network
+
+
+  ### PostgreSQL database for buyers
+
+  buyers-db:
+    image: postgres:latest
+    container_name: buyers-db
+    env_file:
+    - buyers.env
+    ###environment:
+    ### POSTGRES_USER: postgres
+    ### POSTGRES_PASSWORD: inventory
+    ### POSTGRES_DB: inventory
+    ports:
+      - "5434:5432"
+    volumes:
+      - buyers-db:/var/lib/postgresql/data
+    networks:
+      - buyers-network
