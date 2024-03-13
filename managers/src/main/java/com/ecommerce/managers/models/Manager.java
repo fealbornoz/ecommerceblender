@@ -1,5 +1,7 @@
 package com.ecommerce.managers.models;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,9 +22,15 @@ public class Manager {
     @Column(name = "lastName", columnDefinition = "VARCHAR(15)") 
     private String lastName;
     
-    @OneToMany
-    @JoinColumn(name = "product_base_id", referencedColumnName = "id")
-    private ProductBase productBase;
+    @OneToMany(mappedBy = "manager")
+    private List<ProductBase> productsBase;
+
+
+
+     public Manager(String name, String lastName ){
+        this.name = name;
+        this.lastName = lastName;
+    }
 
     
 }

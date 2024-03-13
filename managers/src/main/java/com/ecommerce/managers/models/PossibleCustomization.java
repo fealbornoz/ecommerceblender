@@ -1,20 +1,19 @@
 package com.ecommerce.managers.models;
 
-import java.util.List;
+import java.util.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 
 
 
 @Entity
 @Table(name = "possible_customization")
+@Setter
+@Getter
 public class PossibleCustomization {
 
     @Id
@@ -24,19 +23,43 @@ public class PossibleCustomization {
     @JoinColumn(name = "isActive")
     private Boolean isActive;
 
-    @OneToMany
+
+
+    @ManyToMany(mappedBy = "possibleCustomizations")
+    private Set<ProductBase> productBases;
+
+    @ManyToOne
     @JoinColumn(name = "customization_area_id", referencedColumnName = "id")
-    private List<CustomizationArea> customizationAreas;
+    private CustomizationArea customizationArea;
+
+    @ManyToOne
+    @JoinColumn(name = "customization_type_id", referencedColumnName = "id")
+    private CustomizationType customizationType;
 
 
     
+
+    public PossibleCustomization(CustomizationArea customizationAreas, CustomizationType customizationTypes){
+
+        this.isActive = true;
+        this.customizationArea = customizationAreas;
+        this.customizationType = customizationTypes;
+
+
+    }
+
     
- /*    // Esto se obtiene dependiendo si hay un customizationArea seleccionado
+    /* // Esto se obtiene dependiendo si hay un customizationArea seleccionado
     // Si hay un customizationArea seleccionado, se obtiene el customizationType
     @OneToMany
-    @JoinColumn(name = "customization_type_id", referencedColumnName = "id")
     private List<CustomizationType> customizationTypes; */
 
+
+
+
+  /*   public List<CustomizationArea> getCustomizationAreas() {
+        return this.customizationAreas;
+    } */
 }
 
 

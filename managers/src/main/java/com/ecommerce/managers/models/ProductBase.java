@@ -1,6 +1,5 @@
 package com.ecommerce.managers.models;
 
-
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -25,28 +24,28 @@ public class ProductBase {
     @Column(name = "price")
     private Double price;
 
-
     @Column(name = "manufacturingTime")
     private Integer manufacturingTime;
 
     @Column(name = "isActive")
     private Boolean isActive;
 
-    // Crea una tabla intermedia para la relación muchos a muchos de productBase y possibleCustomization
-    // Aunque no se especifique el nombre de la tabla intermedia, se crea una tabla con el nombre de ambas tablas
-    // Lo hago para que quede más claro
     @ManyToMany
-    @JoinTable(
-        name = "product_base_possible_customization",
-        joinColumns = @JoinColumn(name = "product_base_id"),
-        inverseJoinColumns = @JoinColumn(name = "possible_customization_id")
-    )
     private Set<PossibleCustomization> possibleCustomizations;
-
-
 
     // Acá hay bidireccionalidad
     @ManyToOne(optional = false)
-    @JoinColumn(name = "gestorId", referencedColumnName = "id")
+    @JoinColumn(name = "manager_id", referencedColumnName = "id")
     private Manager manager;
+
+    public ProductBase(String name, String description, Double price, Integer manufacturingTime, Manager manager,
+            Set<PossibleCustomization> possibleCustomizations) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.manufacturingTime = manufacturingTime;
+        this.isActive = true;
+        this.manager = manager;
+        this.possibleCustomizations = possibleCustomizations;
+    }
 }

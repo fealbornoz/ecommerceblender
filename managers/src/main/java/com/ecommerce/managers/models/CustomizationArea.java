@@ -2,17 +2,15 @@ package com.ecommerce.managers.models;
 
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Entity
 @Table(name = "customization_area")
+@Setter
+@Getter
 public class CustomizationArea {
     
 
@@ -23,9 +21,15 @@ public class CustomizationArea {
     @JoinColumn(name = "name", columnDefinition = "VARCHAR(50)")
     private String name;
 
-    @OneToMany
-    @JoinColumn(name = "customization_type_id", referencedColumnName = "id")
-    private List<CustomizationType> customizationTypes;
+
+    @OneToMany(mappedBy = "customization_type")
+    private List<PossibleCustomization> possibleCustomizations;
+
+
+    public CustomizationArea(String name){
+        this.name = name;
+    }
+   
 
     
 }
