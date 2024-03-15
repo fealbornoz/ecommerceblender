@@ -1,32 +1,43 @@
 package com.ecommerce.sellers.models;
 
-import jakarta.persistence.*;
+import java.util.Set;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Table(name = "personalization")
+@Setter
+@Getter
 public class Personalization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-
-
-    @Column(name = "name", columnDefinition = "VARCHAR()")
-    private String name;
+    private Long id;
 
 
     @JoinColumn(name = "isActive_possible_customization")
     private Boolean isActive;
 
+  
+
+    @ManyToMany(mappedBy = "personalization")
+    private Set<FinalProduct> finalProducts;
+
+    @ManyToOne
+    @JoinColumn(name = "selected_customization_area_id", referencedColumnName = "id")
+    private SelectedCustomizationArea selectedCustomizationArea;
+
+    @ManyToOne
+    @JoinColumn(name = "selected_customization_type_id", referencedColumnName = "id")
+    private SelectedCustomizationType selectedCustomizationType;
 
 
-    // Esto hace referencia a la tabla possible_customizations del microservicio managers
-    @Column(name = "possible_customization")
-    private String possibleCustomization;
 
-
-
-    // Esto hace que tengamos bidireccionalidad
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "final_product_id",  referencedColumnName = "id ")
-    private FinalProduct finalProduct;
-    
-}
+    public Personalization( SelectedCustomizationArea selectedCustomizationArea, SelectedCustomizationType selectedCustomizationType) {
+        this.isActive = true;
+        this.selectedCustomizationArea = selectedCustomizationArea;
+        this.selectedCustomizationType = selectedCustomizationType;
+    }
+} 

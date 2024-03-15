@@ -1,12 +1,12 @@
 package com.ecommerce.sellers.models;
 
-import java.util.Set;
 
 import jakarta.persistence.*;
 
 
-
-public class PaymentMethods {
+@Entity
+@Table(name = "payment_method")
+public class PaymentMethod {
 
 
     @Id
@@ -28,6 +28,10 @@ public class PaymentMethods {
 
 
 
+    public PaymentMethod(String name, Seller seller) {
+        this.name = name;
+        this.seller = seller;
+    }
 
 
 }

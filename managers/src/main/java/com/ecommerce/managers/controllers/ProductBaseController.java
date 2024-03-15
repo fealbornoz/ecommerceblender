@@ -15,10 +15,12 @@ import com.ecommerce.managers.dtos.PossibleCustomizationDTO;
 import com.ecommerce.managers.dtos.ProductBaseDTO;
 import com.ecommerce.managers.models.CustomizationArea;
 import com.ecommerce.managers.models.CustomizationType;
+import com.ecommerce.managers.models.Manager;
 import com.ecommerce.managers.models.PossibleCustomization;
 import com.ecommerce.managers.models.ProductBase;
 import com.ecommerce.managers.repositories.CustomizationAreaRepository;
 import com.ecommerce.managers.repositories.CustomizationTypeRepository;
+import com.ecommerce.managers.repositories.ManagerRepository;
 import com.ecommerce.managers.repositories.PossibleCustomizationRepository;
 import com.ecommerce.managers.repositories.ProductBaseRepository;
 
@@ -30,20 +32,38 @@ public class ProductBaseController {
     @Autowired
     private ProductBaseRepository productBaseRepository;
 
-    @PostMapping("/")
-    public @ResponseBody ResponseEntity<String> createProductBase(@RequestBody ProductBaseDTO productBase) {
+    @Autowired
+    private ManagerRepository managerRepository;
+
+    @Autowired
+    private PossibleCustomizationRepository possibleCustomizationRepository;
+
+    @PostMapping("/{id}")
+    public @ResponseBody ResponseEntity<String> createProductBase(@PathVariable Long id,
+            @RequestBody ProductBaseDTO productBase) {
 
         if (productBase.getName().isEmpty() || productBase.getDescription().isEmpty() || productBase.getPrice() == null
-                || productBase.getManufacturingTime() == null
-                || productBase.getManager() == null || productBase.getPossibleCustomizations() == null) {
+                || productBase.getManufacturingTime() == null || id == null) {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("All fields are required.");
         } else {
+
+            Manager managerFound = managerRepository.findById(id).get();
             ProductBase newProductBase = new ProductBase(productBase.getName(), productBase.getDescription(),
-                    productBase.getPrice(), productBase.getManufacturingTime(), productBase.getManager(),
-                    productBase.getPossibleCustomizations());
+                    productBase.getPrice(), productBase.getManufacturingTime(), managerFound);
+
+            for (PossibleCustomization possibleCustomization : productBase.getPossibleCustomizations()) {
+
+                if (possibleCustomization.getId() != null) {
+
+                    PossibleCustomization newPossibleCustomization = possibleCustomizationRepository
+                            .findById(possibleCustomization.getId()).get();
+                    newProductBase.getPossibleCustomizations().add(newPossibleCustomization);
+                    newPossibleCustomization.getProductBases().add(newProductBase);
+                }
+
+            }
 
             productBaseRepository.save(newProductBase);
-
             return ResponseEntity.status(HttpStatus.SC_CREATED)
                     .body("Product base created, id: " + newProductBase.getId());
         }
@@ -84,13 +104,11 @@ public class ProductBaseController {
             Optional<ProductBase> productBaseToUpdate = productBaseRepository.findById(id);
 
             if (productBaseToUpdate.isPresent()) {
-
                 ProductBase productBaseUpdated = productBaseToUpdate.get();
                 productBaseUpdated.setName(productBase.getName());
                 productBaseUpdated.setDescription(productBase.getDescription());
                 productBaseUpdated.setPrice(productBase.getPrice());
                 productBaseUpdated.setManufacturingTime(productBase.getManufacturingTime());
-                productBaseUpdated.setManager(productBase.getManager());
                 productBaseUpdated.setPossibleCustomizations(productBase.getPossibleCustomizations());
                 productBaseRepository.save(productBaseUpdated);
 

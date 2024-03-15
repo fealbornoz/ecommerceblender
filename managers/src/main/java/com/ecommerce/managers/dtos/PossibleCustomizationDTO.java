@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 public class PossibleCustomizationDTO {
 
+    Boolean isActive;
     CustomizationArea customizationArea;
     CustomizationType customizationType;
 }

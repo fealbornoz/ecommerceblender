@@ -3,9 +3,13 @@ package com.ecommerce.sellers.models;
 import java.util.List;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "store")
+@Setter
+@Getter
 public class Store {
     
 
@@ -22,7 +26,14 @@ public class Store {
 
 
 
-    @OneToOne(mappedBy = "store")
+    @OneToOne(fetch = FetchType.LAZY,  cascade = CascadeType.ALL)
+    @JoinColumn(name = "seller_id", referencedColumnName = "id")
     private Seller seller;
+
+
+    public Store(String name, Seller seller) {
+        this.name = name;
+        this.seller = seller;
+    }
 
 }

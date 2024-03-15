@@ -2,10 +2,16 @@ package com.ecommerce.sellers.models;
 
 import java.time.LocalDateTime;
 
+import com.ecommerce.sellers.dtos.PublicationDTO;
+
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "publication")
+@Setter
+@Getter
 public class Publication {
 
     @Id
@@ -18,18 +24,12 @@ public class Publication {
     @Column(name = "date")
     private LocalDateTime date;
 
-    @Column(name = "price")
-    private Double price;
-
     @Enumerated
     @Column(name = "state")
     private PublicationState state;
 
-    @Column(name = "isActive")
-    private Boolean isActive;
-
     @Column(name = "sales_count")
-    private Integer salesCount;
+    private Integer salesCount = 0;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "final_product_id", referencedColumnName = "id")
@@ -42,5 +42,17 @@ public class Publication {
 
     @OneToOne(mappedBy = "publication")
     private Sales sale;
+
+    public Publication(PublicationDTO publication, FinalProduct product, Store store) {
+
+        this.name = publication.getName();
+        this.date = LocalDateTime.now();
+        publication.getState();
+        this.state = PublicationState.ACTIVATED;
+        this.salesCount = this.salesCount + 1;
+        this.finalProduct = product;
+        this.store = store;
+
+    }
 
 }

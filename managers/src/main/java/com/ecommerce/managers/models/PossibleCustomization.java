@@ -18,7 +18,7 @@ public class PossibleCustomization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     @JoinColumn(name = "isActive")
     private Boolean isActive;

@@ -1,7 +1,6 @@
 package com.ecommerce.sellers.models;
 
 
-import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -23,5 +22,11 @@ public class Sales {
     @OneToOne
     @JoinColumn(name = "publication_id")
     private Publication publication;
+
+
+    public Sales(Seller seller, Publication publication) {
+        this.seller = seller;
+        this.publication = publication;
+    }
 
 }

@@ -22,7 +22,7 @@ public class CustomizationArea {
     private String name;
 
 
-    @OneToMany(mappedBy = "customization_type")
+    @OneToMany(mappedBy = "customization_area")
     private List<PossibleCustomization> possibleCustomizations;
 
 

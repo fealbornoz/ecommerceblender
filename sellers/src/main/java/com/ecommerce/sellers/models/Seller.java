@@ -5,7 +5,13 @@ import java.util.Set;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Entity
+@Table(name = "seller")
+@Setter
+@Getter
 public class Seller {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,13 +23,18 @@ public class Seller {
     @Column(name = "lastName", columnDefinition = "VARCHAR(15)")
     private String lastName;
 
+    @Column(name = "email", columnDefinition = "VARCHAR(20)")
+    private String email;
+
+    @Column(name = "isActive", columnDefinition = "BOOLEAN")
+    private Boolean isActive;
+
     @OneToMany(mappedBy = "seller")
-    private Set<PaymentMethods> paymentMethods;
+    private Set<PaymentMethod> paymentMethods;
 
 
     //Por ahora hago que tenga sólo una tienda, pero en el futuro puede tener más
-    @OneToOne(fetch = FetchType.LAZY,  cascade = CascadeType.ALL)
-    @JoinColumn(name = "store_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "store")
     private Store store;
 
     
@@ -35,5 +46,13 @@ public class Seller {
 
     @OneToMany(mappedBy = "seller")
     private List<Sales> sales;
+
+
+    public Seller(String name, String lastName,String email) {
+        this.name = name;
+        this.lastName = lastName;
+        this.email = email;
+        this.isActive = true;
+    }
 
 }

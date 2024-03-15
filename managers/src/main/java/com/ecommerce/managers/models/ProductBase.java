@@ -38,14 +38,12 @@ public class ProductBase {
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
     private Manager manager;
 
-    public ProductBase(String name, String description, Double price, Integer manufacturingTime, Manager manager,
-            Set<PossibleCustomization> possibleCustomizations) {
+    public ProductBase(String name, String description, Double price, Integer manufacturingTime, Manager manager) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.manufacturingTime = manufacturingTime;
         this.isActive = true;
         this.manager = manager;
-        this.possibleCustomizations = possibleCustomizations;
     }
 }
