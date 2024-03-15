@@ -6,26 +6,39 @@ import jakarta.persistence.*;
 
 public class OrderItem {
 
-    @Id
+	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
+	private Long id;
 
-
-    @Column(name = "name_publication", columnDefinition = "VARCHAR(50)")
+	@Column(name = "namePublication", columnDefinition = "VARCHAR(50)")
 	private String namePublication;
 
-    @Column(name = "quantity")
+	@Column(name = "quantity")
 	private Integer quantity;
 
-    @ManyToOne
+	@Column(name = "price")
+	private Double price;
+
+	@Column(name = "publication_id")
+	private Integer publicationId;
+
+	@Column(name = "store_id")
+	private Integer storeId;
+
+	@ManyToOne
 	@JoinColumn(name = "order_id", referencedColumnName = "id")
 	@JsonBackReference
 	private Order order;
 
-
-
-
-
+	public OrderItem(String namePublication, Integer quantity,
+	 Double price, Integer publicationId,
+	  Integer storeId) {
+		this.namePublication = namePublication;
+		this.quantity = quantity;
+		this.price = price;
+		this.publicationId = publicationId;
+		this.storeId = storeId;
+	}
 
 
 }
