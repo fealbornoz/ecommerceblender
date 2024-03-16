@@ -3,6 +3,7 @@ package com.ecommerce.managers.controllers;
 import java.util.*;
 
 import org.apache.hc.core5.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,15 +15,16 @@ import com.ecommerce.managers.models.ProductBase;
 import com.ecommerce.managers.repositories.ManagerRepository;
 import com.ecommerce.managers.repositories.ProductBaseRepository;
 
-import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 
 @RepositoryRestController
 @RequestMapping("/managers")
 public class ManagerController {
 
-    @PersistenceContext
+    @Autowired
     private ManagerRepository managerRepository;
+
+    @Autowired
+    private ProductBaseRepository productBaseRepository;
 
     @PostMapping("/")
     public @ResponseBody ResponseEntity<String> createManager(@RequestBody ManagerDTO manager) {
@@ -106,4 +108,47 @@ public class ManagerController {
         }
     }
 
+    @PostMapping("/{id}/productBase")
+    public @ResponseBody ResponseEntity<String> createProductBase(@PathVariable("id") Long id,
+            @RequestBody ProductBaseDTO productBase) {
+
+        if (productBase.getName().isEmpty() || productBase.getDescription().isEmpty() || productBase.getPrice() == null
+                || productBase.getManufacturingTime() == null || id == null) {
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("All fields are required.");
+        } else {
+
+            Manager managerFound = managerRepository.findById(id).get();
+            ProductBase newProductBase = new ProductBase(productBase.getName(), productBase.getDescription(),
+                    productBase.getPrice(), productBase.getManufacturingTime(), productBase.getPossibleCustomizations());
+
+            managerFound.addProductBase(newProductBase);
+
+            managerRepository.save(managerFound);
+
+            return ResponseEntity.status(HttpStatus.SC_CREATED)
+                    .body("Product base created, id: " + newProductBase.getId());
+        }
+    }
+
+    @DeleteMapping("/{idManager}/productBase/{idProductBase}")
+    public @ResponseBody ResponseEntity<String> deleteProductBase(@PathVariable("idManager") Long idManager,
+            @PathVariable("idProductBase") Long idProductBase) {
+
+        if (idManager == null || idProductBase == null) {
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Id is required");
+        } else {
+            Optional<Manager> managerOptional = managerRepository.findById(idManager);
+            Optional<ProductBase> productBaseOptional = productBaseRepository.findById(idProductBase);
+            if (managerOptional.isPresent() && productBaseOptional.isPresent()) {
+                Manager manager = managerOptional.get();
+                ProductBase productBase = productBaseOptional.get();
+                manager.removeProductBase(productBase);
+                return ResponseEntity.status(HttpStatus.SC_OK).body("Product base deleted");
+            } else {
+                return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("Product base not found");
+            }
+        }
+    }
+
+    
 }

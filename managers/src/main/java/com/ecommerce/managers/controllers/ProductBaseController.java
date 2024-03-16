@@ -1,28 +1,17 @@
 package com.ecommerce.managers.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.http.HttpStatus;
-import org.hibernate.mapping.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.ecommerce.managers.dtos.PossibleCustomizationDTO;
 import com.ecommerce.managers.dtos.ProductBaseDTO;
-import com.ecommerce.managers.models.CustomizationArea;
-import com.ecommerce.managers.models.CustomizationType;
-import com.ecommerce.managers.models.Manager;
-import com.ecommerce.managers.models.PossibleCustomization;
-import com.ecommerce.managers.models.ProductBase;
-import com.ecommerce.managers.repositories.CustomizationAreaRepository;
-import com.ecommerce.managers.repositories.CustomizationTypeRepository;
-import com.ecommerce.managers.repositories.ManagerRepository;
-import com.ecommerce.managers.repositories.PossibleCustomizationRepository;
-import com.ecommerce.managers.repositories.ProductBaseRepository;
+import com.ecommerce.managers.models.*;
+import com.ecommerce.managers.repositories.*;
 
 @RepositoryRestController
 // Esta es la ruta general para acceder a este controlador
@@ -31,43 +20,6 @@ public class ProductBaseController {
 
     @Autowired
     private ProductBaseRepository productBaseRepository;
-
-    @Autowired
-    private ManagerRepository managerRepository;
-
-    @Autowired
-    private PossibleCustomizationRepository possibleCustomizationRepository;
-
-    @PostMapping("/{id}")
-    public @ResponseBody ResponseEntity<String> createProductBase(@PathVariable Long id,
-            @RequestBody ProductBaseDTO productBase) {
-
-        if (productBase.getName().isEmpty() || productBase.getDescription().isEmpty() || productBase.getPrice() == null
-                || productBase.getManufacturingTime() == null || id == null) {
-            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("All fields are required.");
-        } else {
-
-            Manager managerFound = managerRepository.findById(id).get();
-            ProductBase newProductBase = new ProductBase(productBase.getName(), productBase.getDescription(),
-                    productBase.getPrice(), productBase.getManufacturingTime(), managerFound);
-
-            for (PossibleCustomization possibleCustomization : productBase.getPossibleCustomizations()) {
-
-                if (possibleCustomization.getId() != null) {
-
-                    PossibleCustomization newPossibleCustomization = possibleCustomizationRepository
-                            .findById(possibleCustomization.getId()).get();
-                    newProductBase.getPossibleCustomizations().add(newPossibleCustomization);
-                    newPossibleCustomization.getProductBases().add(newProductBase);
-                }
-
-            }
-
-            productBaseRepository.save(newProductBase);
-            return ResponseEntity.status(HttpStatus.SC_CREATED)
-                    .body("Product base created, id: " + newProductBase.getId());
-        }
-    }
 
     @GetMapping("/")
     public @ResponseBody ResponseEntity<Object> getAllProductBase() {
@@ -105,11 +57,7 @@ public class ProductBaseController {
 
             if (productBaseToUpdate.isPresent()) {
                 ProductBase productBaseUpdated = productBaseToUpdate.get();
-                productBaseUpdated.setName(productBase.getName());
-                productBaseUpdated.setDescription(productBase.getDescription());
-                productBaseUpdated.setPrice(productBase.getPrice());
-                productBaseUpdated.setManufacturingTime(productBase.getManufacturingTime());
-                productBaseUpdated.setPossibleCustomizations(productBase.getPossibleCustomizations());
+                productBaseUpdated.update(productBase);
                 productBaseRepository.save(productBaseUpdated);
 
                 return ResponseEntity.status(HttpStatus.SC_OK)
@@ -121,20 +69,8 @@ public class ProductBaseController {
 
     }
 
-    @DeleteMapping("/{id}")
-    public @ResponseBody ResponseEntity<String> deleteProductBase(@PathVariable("id") Long id) {
 
-        if (id == null) {
-            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Id is required.");
-        } else {
-            Optional<ProductBase> existingProductBase = productBaseRepository.findById(id);
-            if (!existingProductBase.isPresent()) {
-                return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("ProductBase not found.");
-            } else {
-                productBaseRepository.deleteById(id);
-                return ResponseEntity.status(HttpStatus.SC_OK).body("ProductBase deleted.");
-            }
-        }
-    }
+
+
 
 }

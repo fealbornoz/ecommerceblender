@@ -1,6 +1,10 @@
 package com.ecommerce.managers.models;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
+
+import com.ecommerce.managers.dtos.ProductBaseDTO;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -38,12 +42,21 @@ public class ProductBase {
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
     private Manager manager;
 
-    public ProductBase(String name, String description, Double price, Integer manufacturingTime, Manager manager) {
+    public ProductBase(String name, String description, Double price, Integer manufacturingTime, Set<PossibleCustomization> possibleCustomizations) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.manufacturingTime = manufacturingTime;
         this.isActive = true;
-        this.manager = manager;
+        this.possibleCustomizations = possibleCustomizations;
     }
+
+    public void update(ProductBaseDTO productBaseDTO) {
+        this.name = productBaseDTO.getName();
+        this.description = productBaseDTO.getDescription();
+        this.price = productBaseDTO.getPrice();
+        this.manufacturingTime = productBaseDTO.getManufacturingTime();
+        this.possibleCustomizations = productBaseDTO.getPossibleCustomizations();
+    }
+
 }

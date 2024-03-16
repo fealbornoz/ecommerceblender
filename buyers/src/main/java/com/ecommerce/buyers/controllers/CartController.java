@@ -4,9 +4,9 @@ import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 import com.ecommerce.buyers.models.*;
 import com.ecommerce.buyers.repositories.BuyerRepository;
@@ -22,28 +22,27 @@ public class CartController {
     @Autowired
     private CartRepository cartRepository;
 
-    @PostMapping("/{idBuyer}")
-    public @ResponseBody ResponseEntity<String> createCart(@PathVariable("idBuyer") Long idBuyer) {
-
+    @PostMapping("/createItemsInCart/{idBuyer}")
+    public @ResponseBody ResponseEntity<String> addItemToCart(@PathVariable("idBuyer") Long idBuyer,
+            @RequestBody Item item) {
         if (idBuyer == null) {
             return ResponseEntity.badRequest().body("idBuyer is required");
         } else {
-            Optional<Buyer> buyer = buyerRepository.findById(idBuyer);
-            if (!buyer.isPresent()) {
-                return ResponseEntity.notFound().build();
+            Cart cart;
+            Optional<Cart> cartOptional = cartRepository.findByBuyerId(idBuyer);
+            if (cartOptional.isPresent()) {
+                cart = cartOptional.get();
             } else {
-                Optional<Cart> cartIsFound = cartRepository.findByBuyerId(idBuyer);
-
-                if (cartIsFound.isPresent()) {
-                    return ResponseEntity.badRequest().body("Cart already exists");
-                } else {
-                    Cart newCart = new Cart(buyer.get());
-                    cartRepository.save(newCart);
-                    return ResponseEntity.ok("Cart created");
-                }
+                Buyer buyer = buyerRepository.findById(idBuyer)
+                        .orElseThrow(() -> new ResourceNotFoundException("Buyer not found"));
+                cart = new Cart(buyer);
+                cartRepository.save(cart);
             }
-        }
+            cart.addItem(item);
+            cartRepository.save(cart);
+            return ResponseEntity.ok("Item added to cart");
 
+        }
     }
 
     @DeleteMapping("/{idCart}/items")
@@ -63,7 +62,6 @@ public class CartController {
         }
     }
 
-    
 
 
 }

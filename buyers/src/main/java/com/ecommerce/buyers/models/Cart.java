@@ -11,22 +11,24 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Cart {
-    @Id
+	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-
-    @OneToOne
+	@OneToOne
 	@JoinColumn(name = "buyer_id", referencedColumnName = "id")
 	private Buyer buyer;
 
-
-    @OneToMany(mappedBy = "cart")
+	@OneToMany(mappedBy = "cart")
 	private List<Item> items;
-
 
 	public Cart(Buyer buyer) {
 		this.buyer = buyer;
 	}
-    
+
+	public void addItem(Item item) {
+		this.items.add(item);
+
+	}
+
 }

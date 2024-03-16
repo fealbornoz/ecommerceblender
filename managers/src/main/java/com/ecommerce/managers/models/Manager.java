@@ -1,5 +1,6 @@
 package com.ecommerce.managers.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -30,8 +31,22 @@ public class Manager {
      public Manager(String name, String lastName ){
         this.name = name;
         this.lastName = lastName;
+        this.productsBase = new ArrayList<>();
     }
 
+    public void addProductBase(ProductBase productBase){
+        this.productsBase.add(productBase);
+    }
+
+
+    public void removeProductBase(ProductBase productBase){
+        this.productsBase.remove(productBase);
+    }
+
+
     
+
+
+  
 }
 
