@@ -1,7 +1,6 @@
 package com.ecommerce.sellers.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,34 +12,48 @@ import com.ecommerce.sellers.dtos.SelectedCustomizationAreaDTO;
 import com.ecommerce.sellers.models.SelectedCustomizationArea;
 import com.ecommerce.sellers.repositories.SelectedCustomizationAreaRepository;
 
+
 @RepositoryRestController
 @RequestMapping("/selectedCustomizationArea")
 public class SelectedCustomizationAreaController {
 
+
+
     @Autowired
     private SelectedCustomizationAreaRepository selectedCustomizationAreaRepository;
+    
+    @PatchMapping("/{id}")
+    public @ResponseBody ResponseEntity<String> updateSelectedCustomizationArea(@PathVariable Long id, @RequestBody SelectedCustomizationAreaDTO selectedCustomizationAreaDTO) {
 
-    @PostMapping("/")
-    public @ResponseBody ResponseEntity<Object> createBulkPersonalization(
-            @RequestBody SelectedCustomizationAreaDTO selectedCustomizationArea) {
-
-        if (selectedCustomizationArea.getNames() == null) {
-            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("All fields are required.");
+        if (id == null || selectedCustomizationAreaDTO == null) {
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("id and selectedCustomizationAreaDTO are required");
         } else {
-
-            // Por cada area de personalizacion seleccionada se crea un nuevo objeto con un
-            // tipo de personalizacion seleccionado
-            List<SelectedCustomizationArea> createdSelectedCustomizationAreas = new ArrayList<>();
-            for (int i = 0; i < selectedCustomizationArea.getNames().size(); i++) {
-
-                SelectedCustomizationArea newSelectedCustomizationArea = new SelectedCustomizationArea(
-                        selectedCustomizationArea.getNames().get(i));
-                selectedCustomizationAreaRepository.save(newSelectedCustomizationArea);
+            Optional<SelectedCustomizationArea> selectedCustomizationAreaToUpdate = selectedCustomizationAreaRepository.findById(id);
+            if (selectedCustomizationAreaToUpdate.isPresent()) {
+                selectedCustomizationAreaToUpdate.get().setName(selectedCustomizationAreaDTO.getName());
+                selectedCustomizationAreaRepository.save(selectedCustomizationAreaToUpdate.get());
+                return ResponseEntity.status(HttpStatus.SC_OK).body("SelectedCustomizationArea updated");
+            } else {
+                return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("SelectedCustomizationArea not found");
             }
-
-            return ResponseEntity.status(HttpStatus.SC_CREATED).body(createdSelectedCustomizationAreas);
         }
+    }
 
+
+    @DeleteMapping("/{id}")
+    public @ResponseBody ResponseEntity<String> deleteSelectedCustomizationArea(@PathVariable Long id) {
+
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("id is required");
+        } else {
+            Optional<SelectedCustomizationArea> selectedCustomizationAreaToDelete = selectedCustomizationAreaRepository.findById(id);
+            if (selectedCustomizationAreaToDelete.isPresent()) {
+                selectedCustomizationAreaRepository.delete(selectedCustomizationAreaToDelete.get());
+                return ResponseEntity.status(HttpStatus.SC_OK).body("SelectedCustomizationArea deleted");
+            } else {
+                return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("SelectedCustomizationArea not found");
+            }
+        }
     }
 
 }

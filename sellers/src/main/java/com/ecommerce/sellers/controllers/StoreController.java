@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ecommerce.sellers.dtos.PublicationDTO;
 import com.ecommerce.sellers.dtos.StoreDTO;
-import com.ecommerce.sellers.models.Seller;
 import com.ecommerce.sellers.models.Store;
-import com.ecommerce.sellers.repositories.SellerRepository;
 import com.ecommerce.sellers.repositories.StoreRepository;
+import com.ecommerce.sellers.services.PublicationService;
 
 @RepositoryRestController
 @RequestMapping("/store")
@@ -27,39 +27,20 @@ public class StoreController {
     @Autowired
     private StoreRepository storeRepository;
 
+
     @Autowired
-    private SellerRepository sellerRepository;
-
-    @PostMapping("/{id}")
-    public @ResponseBody ResponseEntity<String> createStore(@PathVariable Long id, @RequestBody StoreDTO store) {
-
-        if (store.getName() == null || id == null) {
-            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("name is required");
-        } else {
-
-            Seller sellerFound = sellerRepository.findById(id).get();
-            Store newStore = new Store(store.getName(), sellerFound);
-
-            storeRepository.save(newStore);
-
-            return ResponseEntity.status(HttpStatus.SC_CREATED).body("Store created");
-
-        }
-    }
-
-
-
+    private PublicationService publicationService;
+    
     @GetMapping("/")
     public @ResponseBody ResponseEntity<Object> getStores() {
 
         return ResponseEntity.status(HttpStatus.SC_OK).body(storeRepository.findAll());
     }
 
-
     @GetMapping("/{id}")
     public @ResponseBody ResponseEntity<Object> getStore(@PathVariable Long id) {
 
-       if (id == null) {
+        if (id == null) {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Id is required");
         } else {
             Optional<Store> store = storeRepository.findById(id);
@@ -70,7 +51,6 @@ public class StoreController {
             }
         }
     }
-
 
     @PatchMapping("/{id}")
     public @ResponseBody ResponseEntity<String> updateStore(@PathVariable Long id, @RequestBody StoreDTO store) {
@@ -90,5 +70,21 @@ public class StoreController {
             }
         }
 
+    }
+
+    @PostMapping("/addPublication/{idStore}")
+    public @ResponseBody ResponseEntity<String> addPublication(@PathVariable("idStore") Long idStore,
+            @RequestBody PublicationDTO publicationDTO) {
+
+        if (idStore == null || publicationDTO == null) {
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("idStore and publicationDTO are required");
+        } else {
+            try {
+                String message = publicationService.addPublication(idStore, publicationDTO);
+                return ResponseEntity.status(HttpStatus.SC_OK).body(message);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body(e.getMessage());
+            }
+        }
     }
 }

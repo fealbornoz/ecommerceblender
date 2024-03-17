@@ -10,8 +10,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PublicationDTO {
-    String name;
     PublicationState state;
     Integer salesCount;
+    FinalProductDTO finalProduct;
 
 }

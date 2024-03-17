@@ -1,6 +1,5 @@
 package com.ecommerce.managers.models;
 
-import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,8 +21,9 @@ public class CustomizationArea {
     private String name;
 
 
-    @OneToMany(mappedBy = "customization_area")
-    private List<PossibleCustomization> possibleCustomizations;
+    @OneToOne
+    @JoinColumn(name = "possible_customization_id", referencedColumnName = "id")
+    private PossibleCustomization possibleCustomization;
 
 
     public CustomizationArea(String name){

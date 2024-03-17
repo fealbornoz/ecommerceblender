@@ -1,5 +1,7 @@
 package com.ecommerce.buyers.models;
 
+import com.ecommerce.buyers.dtos.OrderItemDTO;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,13 +35,13 @@ public class Item {
     @JoinColumn(name = "cart_id", referencedColumnName = "id")
     private Cart cart;
 
-    public Item(String namePublication, Integer quantity, Double price, Integer publicationId, Integer storeId,
+    public Item(OrderItemDTO orderItemDTO,
             Cart cart) {
-        this.namePublication = namePublication;
-        this.quantity = quantity;
-        this.price = price;
-        this.publicationId = publicationId;
-        this.storeId = storeId;
+        this.namePublication = orderItemDTO.getNamePublication();
+        this.quantity = orderItemDTO.getQuantity();
+        this.price = orderItemDTO.getPrice();
+        this.publicationId = orderItemDTO.getPublicationId();
+        this.storeId = orderItemDTO.getStoreId();
         this.cart = cart;
     }
 

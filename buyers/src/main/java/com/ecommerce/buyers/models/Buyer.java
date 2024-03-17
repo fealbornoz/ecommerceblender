@@ -30,8 +30,8 @@ public class Buyer {
     @OneToMany(mappedBy = "buyer")
     private List<Order> orders;
 
-    @OneToMany(mappedBy = "buyer")
-    private List<ShippingAddress> shippingAddresses;
+   /*  @OneToMany(mappedBy = "buyer")
+    private List<ShippingAddress> shippingAddresses; */
 
 
     public Buyer(String name, String lastName) {

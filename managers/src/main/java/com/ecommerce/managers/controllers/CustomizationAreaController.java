@@ -18,7 +18,7 @@ public class CustomizationAreaController {
     @Autowired
     private CustomizationAreaRepository customizationAreaRepository;
 
-    @PostMapping("/")
+   /*  @PostMapping("/")
     public @ResponseBody ResponseEntity<String> createCustomizationArea(
             @RequestBody CustomizationAreaDTO customizationArea) {
 
@@ -32,7 +32,7 @@ public class CustomizationAreaController {
             return ResponseEntity.status(HttpStatus.SC_CREATED)
                     .body("Customization area created, id: " + newCustomizationArea.getId());
         }
-    }
+    } */
 
     @GetMapping("/")
     public @ResponseBody ResponseEntity<Object> getAllCustomizationArea() {

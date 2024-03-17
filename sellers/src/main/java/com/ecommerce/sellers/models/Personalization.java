@@ -1,6 +1,9 @@
 package com.ecommerce.sellers.models;
 
-import java.util.Set;
+
+
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -16,28 +19,30 @@ public class Personalization {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-
-    @JoinColumn(name = "isActive_possible_customization")
+    @Column(name = "isActive_possible_customization")
     private Boolean isActive;
 
-  
 
-    @ManyToMany(mappedBy = "personalization")
-    private Set<FinalProduct> finalProducts;
-
-    @ManyToOne
-    @JoinColumn(name = "selected_customization_area_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "personalization")
     private SelectedCustomizationArea selectedCustomizationArea;
 
+    @OneToMany(mappedBy = "personalization")
+    private List<SelectedCustomizationType> selectedCustomizationType;
+
     @ManyToOne
-    @JoinColumn(name = "selected_customization_type_id", referencedColumnName = "id")
-    private SelectedCustomizationType selectedCustomizationType;
+    @JoinColumn(name = "final_product_id", referencedColumnName = "id")
+    private FinalProduct finalProduct;
 
-
-
-    public Personalization( SelectedCustomizationArea selectedCustomizationArea, SelectedCustomizationType selectedCustomizationType) {
+    public Personalization(SelectedCustomizationArea selectedCustomizationArea) {
         this.isActive = true;
         this.selectedCustomizationArea = selectedCustomizationArea;
-        this.selectedCustomizationType = selectedCustomizationType;
+        selectedCustomizationArea.setPersonalization(this);
+        this.selectedCustomizationType = new ArrayList<>();
     }
-} 
+
+    public void addSelectedCustomizationType(SelectedCustomizationType selectedCustomizationType) {
+        this.selectedCustomizationType.add(selectedCustomizationType);
+        selectedCustomizationType.setPossibleCustomizations(this);
+    }
+
+}

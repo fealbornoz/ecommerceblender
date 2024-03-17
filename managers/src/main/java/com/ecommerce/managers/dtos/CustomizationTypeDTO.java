@@ -7,5 +7,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class CustomizationTypeDTO {
+    Long id;
     String name;
 }

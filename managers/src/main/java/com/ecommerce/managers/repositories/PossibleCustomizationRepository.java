@@ -9,4 +9,5 @@ import com.ecommerce.managers.models.PossibleCustomization;
 public interface PossibleCustomizationRepository extends JpaRepository<PossibleCustomization, Long>{
 
 
+
 }

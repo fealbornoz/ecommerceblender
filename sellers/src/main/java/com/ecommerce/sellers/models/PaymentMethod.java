@@ -1,18 +1,23 @@
 package com.ecommerce.sellers.models;
 
 
+import com.ecommerce.sellers.dtos.PaymentMethodDTO;
+
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Entity
 @Table(name = "payment_method")
+@Setter
+@Getter
 public class PaymentMethod {
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    private Long id;
 
 
     @Column(name="name", columnDefinition = "VARCHAR(20)")
@@ -28,9 +33,8 @@ public class PaymentMethod {
 
 
 
-    public PaymentMethod(String name, Seller seller) {
-        this.name = name;
-        this.seller = seller;
+    public PaymentMethod(PaymentMethodDTO paymentMethodDTO) {
+        this.name = paymentMethodDTO.getName();
     }
 
 

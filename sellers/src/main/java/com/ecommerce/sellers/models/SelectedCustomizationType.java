@@ -1,13 +1,12 @@
 package com.ecommerce.sellers.models;
 
-import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,8 +22,9 @@ public class SelectedCustomizationType {
     @JoinColumn(name = "name", columnDefinition = "VARCHAR(50)")
     private String name;
 
-    @OneToMany(mappedBy = "customization_type")
-    private List<Personalization> possibleCustomizations;
+    @ManyToOne
+    @JoinColumn(name = "personalization_id", referencedColumnName = "id")
+    private Personalization possibleCustomizations;
 
 
     public SelectedCustomizationType(String name) {

@@ -1,13 +1,14 @@
 package com.ecommerce.sellers.models;
 
-import java.util.List;
+
+import com.ecommerce.sellers.dtos.SelectedCustomizationAreaDTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,12 +26,13 @@ public class SelectedCustomizationArea {
     private String name;
 
 
-    @OneToMany(mappedBy = "customization_type")
-    private List<Personalization> personalizations;
+    @OneToOne
+    @JoinColumn(name = "personalization_id", referencedColumnName = "id")
+    private Personalization personalization;
 
 
-    public SelectedCustomizationArea(String name){
-        this.name = name;
+    public SelectedCustomizationArea(SelectedCustomizationAreaDTO selectedCustomizationAreaDTO) {
+        this.name = selectedCustomizationAreaDTO.getName();
     }
 
 

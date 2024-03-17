@@ -34,7 +34,7 @@ public class ProductBase {
     @Column(name = "isActive")
     private Boolean isActive;
 
-    @ManyToMany
+    @OneToMany(mappedBy = "productBase")
     private Set<PossibleCustomization> possibleCustomizations;
 
     // Acá hay bidireccionalidad
@@ -42,13 +42,13 @@ public class ProductBase {
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
     private Manager manager;
 
-    public ProductBase(String name, String description, Double price, Integer manufacturingTime, Set<PossibleCustomization> possibleCustomizations) {
+    public ProductBase(String name, String description, Double price, Integer manufacturingTime) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.manufacturingTime = manufacturingTime;
         this.isActive = true;
-        this.possibleCustomizations = possibleCustomizations;
+        this.possibleCustomizations = new HashSet<>();
     }
 
     public void update(ProductBaseDTO productBaseDTO) {
@@ -56,7 +56,12 @@ public class ProductBase {
         this.description = productBaseDTO.getDescription();
         this.price = productBaseDTO.getPrice();
         this.manufacturingTime = productBaseDTO.getManufacturingTime();
-        this.possibleCustomizations = productBaseDTO.getPossibleCustomizations();
+    }
+
+
+    public void addPossibleCustomization(PossibleCustomization possibleCustomization) {
+        this.possibleCustomizations.add(possibleCustomization);
+        possibleCustomization.setProductBase(this);
     }
 
 }

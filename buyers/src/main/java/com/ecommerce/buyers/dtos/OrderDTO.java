@@ -3,7 +3,6 @@ package com.ecommerce.buyers.dtos;
 import java.util.List;
 
 import com.ecommerce.buyers.models.Buyer;
-import com.ecommerce.buyers.models.OrderItem;
 import com.ecommerce.buyers.models.StateOrder;
 
 import lombok.Getter;
@@ -16,6 +15,6 @@ public class OrderDTO {
     Integer store_id;
     String paymentMethod;
     StateOrder stateOrder;
-    List<OrderItem> orderItem;
+    List<OrderItemDTO> orderItem;
 
 }

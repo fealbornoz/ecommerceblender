@@ -1,6 +1,9 @@
 package com.ecommerce.sellers.models;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.ecommerce.sellers.dtos.StoreDTO;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -31,9 +34,17 @@ public class Store {
     private Seller seller;
 
 
-    public Store(String name, Seller seller) {
-        this.name = name;
-        this.seller = seller;
+    public Store(StoreDTO store) {
+        this.name = store.getName();
+        this.publications = new ArrayList<>();
     }
+
+
+    public void addPublication(Publication publication){
+        this.publications.add(publication);
+        publication.setStore(this);
+    }
+
+
 
 }

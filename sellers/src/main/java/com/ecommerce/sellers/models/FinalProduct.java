@@ -1,6 +1,6 @@
 package com.ecommerce.sellers.models;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.ecommerce.sellers.dtos.FinalProductDTO;
@@ -19,6 +19,11 @@ public class FinalProduct {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    // Esto corresponde a la tabla de product_base, que se encuentra en el
+    // microservicio de managers
+    @Column(name = "product_base_id")
+    private Long productBaseId;
+
 
     @Column(name = "name", columnDefinition = "VARCHAR(50)")
     private String name;
@@ -32,14 +37,15 @@ public class FinalProduct {
     @Column(name = "price_base")
     private Double price;
 
-    // Esto corresponde a la tabla de product_base, que se encuentra en el
-    // microservicio de managers
-    @Column(name = "product_base_id")
-    private Long productBase;
+
+    @Column(name = "manufacturingTime")
+    private Long manufacturingTime;
+
 
     // Esto es bidireccionaldiad
-    @OneToMany(mappedBy = "final_product")
-    private List<Publication> publications;
+    @OneToOne
+    @JoinColumn(name = "publication_id", referencedColumnName = "id")
+    private Publication publication;
 
 
     // Esto es bidireccionaldiad
@@ -47,16 +53,24 @@ public class FinalProduct {
     @JoinColumn(name = "seller_id", referencedColumnName = "id")
     private Seller seller;
 
-    @ManyToMany
+    @OneToMany(mappedBy = "finalProduct")
     private Set<Personalization> personalizations;
 
 
     public FinalProduct(FinalProductDTO finalProduct,Seller Seller) {
         this.name = finalProduct.getName();
+        this.productBaseId = finalProduct.getProductBaseId();
         this.description = finalProduct.getDescription();
         this.price = finalProduct.getPrice();
-        this.productBase = finalProduct.getProductBase();
+        this.manufacturingTime = finalProduct.getManufacturingTime();
         this.seller = Seller;
+        this.personalizations = new HashSet<>();
+    }
+
+
+    public void addPersonalization(Personalization personalization) {
+        this.personalizations.add(personalization);
+        personalization.setFinalProduct(this);
     }
     
 

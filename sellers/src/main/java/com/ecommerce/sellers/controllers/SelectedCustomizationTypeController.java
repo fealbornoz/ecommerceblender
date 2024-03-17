@@ -1,7 +1,8 @@
 package com.ecommerce.sellers.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
+
+
+import java.util.Optional;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import com.ecommerce.sellers.dtos.SelectedCustomizationTypeDTO;
 import com.ecommerce.sellers.models.SelectedCustomizationType;
 import com.ecommerce.sellers.repositories.SelectedCustomizationTypeRepository;
 
+
+
 @RepositoryRestController
 @RequestMapping("/selectedCustomizationType")
 public class SelectedCustomizationTypeController {
@@ -20,27 +23,44 @@ public class SelectedCustomizationTypeController {
     @Autowired
     private SelectedCustomizationTypeRepository selectedCustomizationTypeRepository;
 
-    @PostMapping("/")
-    public @ResponseBody ResponseEntity<Object> createBulkPersonalization(
-            @RequestBody SelectedCustomizationTypeDTO selectedCustomizationType) {
 
-        if (selectedCustomizationType.getNames() == null) {
-            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("All fields are required.");
+    @PatchMapping("/{id}")
+    public @ResponseBody ResponseEntity<String> updateSelectedCustomizationType(@PathVariable Long id, @RequestBody SelectedCustomizationTypeDTO selectedCustomizationTypeDTO) {
+
+        if (id == null || selectedCustomizationTypeDTO == null) {
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("id and selectedCustomizationTypeDTO are required");
         } else {
-
-            // Por cada Type de personalizacion seleccionada se crea un nuevo objeto con un
-            // tipo de personalizacion seleccionado
-            List<SelectedCustomizationType> createdSelectedCustomizationTypes = new ArrayList<>();
-            for (int i = 0; i < selectedCustomizationType.getNames().size(); i++) {
-
-                SelectedCustomizationType newSelectedCustomizationType = new SelectedCustomizationType(
-                        selectedCustomizationType.getNames().get(i));
-                selectedCustomizationTypeRepository.save(newSelectedCustomizationType);
+            Optional<SelectedCustomizationType> selectedCustomizationTypeToUpdate = selectedCustomizationTypeRepository.findById(id);
+            if (selectedCustomizationTypeToUpdate.isPresent()) {
+                selectedCustomizationTypeToUpdate.get().setName(selectedCustomizationTypeDTO.getName());
+                selectedCustomizationTypeRepository.save(selectedCustomizationTypeToUpdate.get());
+                return ResponseEntity.status(HttpStatus.SC_OK).body("SelectedCustomizationType updated");
+            } else {
+                return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("SelectedCustomizationType not found");
             }
-
-            return ResponseEntity.status(HttpStatus.SC_CREATED).body(createdSelectedCustomizationTypes);
         }
-
     }
+
+
+    @DeleteMapping("/{id}")
+    public @ResponseBody ResponseEntity<String> deleteSelectedCustomizationType(@PathVariable Long id) {
+
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("id is required");
+        } else {
+            Optional<SelectedCustomizationType> selectedCustomizationTypeToDelete = selectedCustomizationTypeRepository.findById(id);
+            if (selectedCustomizationTypeToDelete.isPresent()) {
+                selectedCustomizationTypeRepository.delete(selectedCustomizationTypeToDelete.get());
+                return ResponseEntity.status(HttpStatus.SC_OK).body("SelectedCustomizationType deleted");
+            } else {
+                return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("SelectedCustomizationType not found");
+            }
+        }
+    }
+
+    
+
+
+    
 
 }

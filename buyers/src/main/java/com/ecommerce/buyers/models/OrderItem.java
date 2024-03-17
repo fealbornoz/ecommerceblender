@@ -3,7 +3,13 @@ package com.ecommerce.buyers.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Entity
+@Table(name = "order_item")
+@Setter
+@Getter
 public class OrderItem {
 
 	@Id

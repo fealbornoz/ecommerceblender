@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 import com.ecommerce.managers.dtos.PossibleCustomizationDTO;
-import com.ecommerce.managers.models.CustomizationArea;
 import com.ecommerce.managers.models.CustomizationType;
 import com.ecommerce.managers.models.PossibleCustomization;
+import com.ecommerce.managers.repositories.CustomizationTypeRepository;
 import com.ecommerce.managers.repositories.PossibleCustomizationRepository;
 
 @RepositoryRestController
@@ -18,9 +18,12 @@ import com.ecommerce.managers.repositories.PossibleCustomizationRepository;
 public class PossibleCustomizationController {
 
     @Autowired
-    PossibleCustomizationRepository possibleCustomizationRepository;
+    private PossibleCustomizationRepository possibleCustomizationRepository;
 
-    @PostMapping("/")
+    @Autowired
+    private CustomizationTypeRepository customizationTypeRepository;
+
+    /* @PostMapping("/")
     public @ResponseBody ResponseEntity<String> createPossibleCustomization(
             @RequestBody PossibleCustomizationDTO possibleCustomization) {
 
@@ -41,7 +44,7 @@ public class PossibleCustomizationController {
             return ResponseEntity.status(HttpStatus.SC_CREATED).body("Possible Customization created");
 
         }
-    }
+    } */
 
     @GetMapping("/")
     public @ResponseBody ResponseEntity<Object> getAllPossibleCustomization() {
@@ -53,15 +56,29 @@ public class PossibleCustomizationController {
         }
     }
 
-    @PatchMapping("/{id}")
+
+    @GetMapping("/{id}")
+    public @ResponseBody ResponseEntity<Object> getPossibleCustomization(@PathVariable("id") Long id) {
+
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Id is required.");
+        } else {
+            Optional<PossibleCustomization> possibleCustomization = possibleCustomizationRepository.findById(id);
+            if (!possibleCustomization.isPresent()) {
+                return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("Possible Customization not found.");
+            } else {
+                return ResponseEntity.status(HttpStatus.SC_OK).body(possibleCustomization.get());
+            }
+        }
+    }
+
+   /*  @PatchMapping("/{id}")
     public @ResponseBody ResponseEntity<String> updatePossibleCustomization(
             @PathVariable("id") Long id,
             @RequestBody PossibleCustomizationDTO possibleCustomization) {
 
-        // Quiero verificar si ya está creado un PossibleCustomization
-
         if (possibleCustomization.getCustomizationArea() == null
-                || possibleCustomization.getCustomizationType() == null || id == null) {
+                || possibleCustomization.getCustomizationTypes() == null || id == null) {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST)
                     .body("customization_area_id and customization_type_id are required");
         } else {
@@ -73,9 +90,14 @@ public class PossibleCustomizationController {
                 return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("Possible Customization not found");
             } else {
                 PossibleCustomization possibleCustomizationDB = existingPossibleCustomization.get();
+                
 
                 possibleCustomizationDB.setCustomizationArea(possibleCustomization.getCustomizationArea());
-                possibleCustomizationDB.setCustomizationType(possibleCustomization.getCustomizationType());
+                
+                possibleCustomization.getCustomizationTypes().forEach(customizationType -> {
+                        CustomizationType customizationTypeFound = customizationTypeRepository.findById(customizationType.getId()).get();
+                        customizationTypeFound.setName(customizationType.getName());
+                });
 
                 possibleCustomizationRepository.save(possibleCustomizationDB);
 
@@ -83,7 +105,7 @@ public class PossibleCustomizationController {
             }
 
         }
-    }
+    } */
 
 
     @DeleteMapping("/{id}")
@@ -101,5 +123,7 @@ public class PossibleCustomizationController {
             }
         }
     }
+
+
 
 }

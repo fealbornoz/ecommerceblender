@@ -1,5 +1,6 @@
 package com.ecommerce.buyers.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -24,11 +25,12 @@ public class Cart {
 
 	public Cart(Buyer buyer) {
 		this.buyer = buyer;
+		this.items = new ArrayList<>();
 	}
 
 	public void addItem(Item item) {
 		this.items.add(item);
-
+		item.setCart(this);
 	}
 
 }

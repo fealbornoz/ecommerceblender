@@ -42,10 +42,13 @@ public class Order {
         this.store_id = store_id;
         this.paymentMethod = paymentMethod;
         this.stateOrder = StateOrder.BILLED;
+        
     }
 
     public void addOrderItem(OrderItem orderItem) {
 		this.orderItems.add(orderItem);
+        orderItem.setOrder(this);
+        
 	}
 
     

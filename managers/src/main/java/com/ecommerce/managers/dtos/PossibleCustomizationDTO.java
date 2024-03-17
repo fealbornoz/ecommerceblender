@@ -1,5 +1,7 @@
 package com.ecommerce.managers.dtos;
 
+import java.util.List;
+
 import com.ecommerce.managers.models.CustomizationArea;
 import com.ecommerce.managers.models.CustomizationType;
 
@@ -10,7 +12,6 @@ import lombok.Setter;
 @Getter
 public class PossibleCustomizationDTO {
 
-    Boolean isActive;
     CustomizationArea customizationArea;
-    CustomizationType customizationType;
+    List<CustomizationTypeDTO> customizationTypes;
 }

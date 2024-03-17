@@ -14,7 +14,7 @@ import lombok.Setter;
 public class Manager {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
 
     @Column(name = "name", columnDefinition = "VARCHAR(15)")
@@ -36,6 +36,7 @@ public class Manager {
 
     public void addProductBase(ProductBase productBase){
         this.productsBase.add(productBase);
+        productBase.setManager(this);
     }
 
 

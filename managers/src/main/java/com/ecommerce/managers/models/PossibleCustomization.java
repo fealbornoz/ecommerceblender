@@ -25,28 +25,39 @@ public class PossibleCustomization {
 
 
 
-    @ManyToMany(mappedBy = "possibleCustomizations")
-    private Set<ProductBase> productBases;
-
-    @ManyToOne
-    @JoinColumn(name = "customization_area_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "possibleCustomization")
     private CustomizationArea customizationArea;
 
+    @OneToMany(mappedBy = "possibleCustomization")
+    private List<CustomizationType> customizationType;
+
     @ManyToOne
-    @JoinColumn(name = "customization_type_id", referencedColumnName = "id")
-    private CustomizationType customizationType;
+    @JoinColumn(name = "product_base_id", referencedColumnName = "id")
+    private ProductBase productBase;
 
 
     
 
-    public PossibleCustomization(CustomizationArea customizationAreas, CustomizationType customizationTypes){
+    public PossibleCustomization(CustomizationArea customizationArea){
 
         this.isActive = true;
-        this.customizationArea = customizationAreas;
-        this.customizationType = customizationTypes;
-
-
+        this.customizationArea = customizationArea ;
+        customizationArea.setPossibleCustomization(this);
     }
+
+    public void addCustomizationType(CustomizationType customizationType){
+        this.customizationType.add(customizationType);
+        customizationType.setPossibleCustomization(this);
+    }
+
+   
+
+
+
+
+
+
+
 
     
     /* // Esto se obtiene dependiendo si hay un customizationArea seleccionado

@@ -21,7 +21,7 @@ public class CustomizationTypeController {
     private CustomizationTypeRepository customizationTypeRepository;
 
 
-    @PostMapping("/")
+  /*   @PostMapping("/")
     public @ResponseBody ResponseEntity<String> createCustomizationType(
             @RequestBody CustomizationTypeDTO customizationType) {
 
@@ -35,7 +35,7 @@ public class CustomizationTypeController {
             return ResponseEntity.status(HttpStatus.SC_CREATED)
                     .body("Customization type created, id: " + newCustomizationType.getId());
         }
-    }
+    } */
 
 
     @GetMapping("/")

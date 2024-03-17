@@ -1,22 +1,17 @@
 package com.ecommerce.sellers.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ecommerce.sellers.dtos.PersonalizationDTO;
 import com.ecommerce.sellers.models.Personalization;
-import com.ecommerce.sellers.models.SelectedCustomizationArea;
-import com.ecommerce.sellers.models.SelectedCustomizationType;
 import com.ecommerce.sellers.repositories.PersonalizationRepository;
 
 @RepositoryRestController
@@ -27,7 +22,7 @@ public class PersonalizationController {
     private PersonalizationRepository personalizationRepository;
 
 
-    @PostMapping("/")
+   /*  @PostMapping("/")
     public @ResponseBody ResponseEntity<Object> createBulkPersonalization(
             @RequestBody PersonalizationDTO personalization) {
 
@@ -55,6 +50,28 @@ public class PersonalizationController {
             return ResponseEntity.status(HttpStatus.SC_CREATED).body(createdPersonalizations);
         }
 
+    } */
+
+
+    @DeleteMapping("/{id}")
+    public @ResponseBody ResponseEntity<String> deletePersonalization(@PathVariable Long id) {
+
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("id is required");
+        } else {
+            Optional<Personalization> personalizationToDelete = personalizationRepository.findById(id);
+            if (personalizationToDelete.isPresent()) {
+                personalizationRepository.delete(personalizationToDelete.get());
+                return ResponseEntity.status(HttpStatus.SC_OK).body("Personalization deleted");
+            } else {
+                return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("Personalization not found");
+            }
+        }
     }
+   
+
+
+
+
 
 }

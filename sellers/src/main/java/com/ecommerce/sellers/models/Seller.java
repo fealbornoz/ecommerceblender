@@ -1,8 +1,10 @@
 package com.ecommerce.sellers.models;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecommerce.sellers.dtos.SellerDTO;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -34,7 +36,7 @@ public class Seller {
 
 
     //Por ahora hago que tenga sólo una tienda, pero en el futuro puede tener más
-    @OneToOne(mappedBy = "store")
+    @OneToOne(mappedBy = "seller")
     private Store store;
 
     
@@ -44,15 +46,31 @@ public class Seller {
     @OneToMany(mappedBy = "seller")
     private List<FinalProduct> finalProducts;
 
-    @OneToMany(mappedBy = "seller")
-    private List<Sales> sales;
+   /*  @OneToMany(mappedBy = "seller")
+    private List<Sales> sales; */
 
 
-    public Seller(String name, String lastName,String email) {
-        this.name = name;
-        this.lastName = lastName;
-        this.email = email;
+    public Seller(SellerDTO sellerDTO) {
+        this.name = sellerDTO.getName();
+        this.lastName = sellerDTO.getLastName();
+        this.email = sellerDTO.getEmail();
         this.isActive = true;
+        this.paymentMethods = new HashSet<>();
     }
+
+
+    public void addPaymentMethod(PaymentMethod paymentMethod){
+        this.paymentMethods.add(paymentMethod);
+        paymentMethod.setSeller(this);
+    }
+
+    public void createStore(Store store){
+        this.store = store;
+        store.setSeller(this);
+    }
+
+
+
+
 
 }

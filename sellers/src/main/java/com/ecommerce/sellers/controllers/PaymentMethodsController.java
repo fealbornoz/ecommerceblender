@@ -1,46 +1,66 @@
 package com.ecommerce.sellers.controllers;
 
+import java.util.Optional;
+
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ecommerce.sellers.dtos.PaymentMethodDTO;
 import com.ecommerce.sellers.models.PaymentMethod;
-import com.ecommerce.sellers.models.Seller;
 import com.ecommerce.sellers.repositories.PaymentMethodRepository;
-import com.ecommerce.sellers.repositories.SellerRepository;
 
 @RepositoryRestController
 @RequestMapping("/paymentMethods")
 public class PaymentMethodsController {
 
-    @Autowired
-    private SellerRepository sellerRepository;
-
+    
     @Autowired
     private PaymentMethodRepository paymentMethodRepository;
 
-    @PostMapping("/{idSeller}")
-    public @ResponseBody ResponseEntity<Object> createPaymentMethod(@PathVariable("idSeller") Long id,
-            @RequestBody PaymentMethodDTO paymentMethod) {
 
-        if (paymentMethod.getName() == null || id == null) {
-            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("All fields are required.");
+
+    @PatchMapping("/{id}")
+    public @ResponseBody ResponseEntity<String> updatePaymentMethod(@PathVariable Long id, @RequestBody PaymentMethodDTO paymentMethodDTO) {
+
+        if (id == null || paymentMethodDTO == null) {
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("id and paymentMethodDTO are required");
         } else {
-
-            Seller sellerFound = sellerRepository.findById(id).get();
-            PaymentMethod newPaymentMethod = new PaymentMethod(paymentMethod.getName(), sellerFound);
-            paymentMethodRepository.save(newPaymentMethod);
-
-            return ResponseEntity.status(HttpStatus.SC_CREATED).body(newPaymentMethod);
+            Optional<PaymentMethod> paymentMethodToUpdate = paymentMethodRepository.findById(id);
+            if (paymentMethodToUpdate.isPresent()) {
+                paymentMethodToUpdate.get().setName(paymentMethodDTO.getName());
+                paymentMethodRepository.save(paymentMethodToUpdate.get());
+                return ResponseEntity.status(HttpStatus.SC_OK).body("PaymentMethod updated");
+            } else {
+                return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("PaymentMethod not found");
+            }
         }
-
     }
+
+
+    @DeleteMapping("/{id}")
+    public @ResponseBody ResponseEntity<String> deletePaymentMethod(@PathVariable Long id) {
+
+        if (id == null) {
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("id is required");
+        } else {
+            Optional<PaymentMethod> paymentMethodToDelete = paymentMethodRepository.findById(id);
+            if (paymentMethodToDelete.isPresent()) {
+                paymentMethodRepository.delete(paymentMethodToDelete.get());
+                return ResponseEntity.status(HttpStatus.SC_OK).body("PaymentMethod deleted");
+            } else {
+                return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("PaymentMethod not found");
+            }
+        }
+    }
+
+   
 
 }
