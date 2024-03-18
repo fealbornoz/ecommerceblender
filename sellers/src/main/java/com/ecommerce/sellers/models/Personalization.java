@@ -42,7 +42,7 @@ public class Personalization {
 
     public void addSelectedCustomizationType(SelectedCustomizationType selectedCustomizationType) {
         this.selectedCustomizationType.add(selectedCustomizationType);
-        selectedCustomizationType.setPossibleCustomizations(this);
+        selectedCustomizationType.setPersonalization(this);
     }
 
 }

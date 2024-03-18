@@ -44,7 +44,7 @@ public class Seller {
     //Si bien los productos finales, están dentro de una tienda, para poder hacer consultas más rápidas,
     //también los guardo acá
     @OneToMany(mappedBy = "seller")
-    private List<FinalProduct> finalProducts;
+    private List<Publication> publications;
 
    /*  @OneToMany(mappedBy = "seller")
     private List<Sales> sales; */

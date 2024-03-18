@@ -1,5 +1,4 @@
 package com.ecommerce.buyers.models;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;
@@ -36,14 +35,12 @@ public class OrderItem {
 	@JsonBackReference
 	private Order order;
 
-	public OrderItem(String namePublication, Integer quantity,
-	 Double price, Integer publicationId,
-	  Integer storeId) {
-		this.namePublication = namePublication;
-		this.quantity = quantity;
-		this.price = price;
-		this.publicationId = publicationId;
-		this.storeId = storeId;
+	public OrderItem(Item item) {
+		this.namePublication = item.getNamePublication();
+		this.quantity = item.getQuantity();
+		this.price = item.getPrice();
+		this.publicationId = item.getPublicationId();
+		this.storeId = item.getStoreId();
 	}
 
 

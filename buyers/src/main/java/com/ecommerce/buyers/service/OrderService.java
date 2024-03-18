@@ -1,6 +1,6 @@
 package com.ecommerce.buyers.service;
 
-import org.jvnet.hk2.annotations.Service;
+import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ecommerce.buyers.dtos.OrderDTO;
@@ -24,10 +24,10 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
-    public String createOrder(Long idBuyer, Long idCart, OrderDTO order) {
+    public String createOrder(Long idBuyer, Long idCart, OrderDTO orderDTO) {
         Cart cart = getCart(idCart);
         Buyer buyer = getBuyer(idBuyer);
-        Order newOrder = createOrder(buyer, order);
+        Order newOrder = new Order(orderDTO, buyer);
         addItemsToOrder(cart, newOrder);
         orderRepository.save(newOrder);
         return "Order created";
@@ -53,15 +53,10 @@ public class OrderService {
 
     }
 
-    private Order createOrder(Buyer buyer, OrderDTO order) {
-        return new Order(buyer, order.getStore_id(), order.getPaymentMethod());
-    }
-
     private void addItemsToOrder(Cart cart, Order order) {
         cart.getItems().forEach(item -> {
-            OrderItem orderItem = new OrderItem(item.getNamePublication(), item.getQuantity(), item.getPrice(),
-                    item.getPublicationId(), order.getStore_id());
-            order.addOrderItem(orderItem);
+            OrderItem newOrderItem = new OrderItem(item);
+            order.addOrderItem(newOrderItem);
         });
     }
 

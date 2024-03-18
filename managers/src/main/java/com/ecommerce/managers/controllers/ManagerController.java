@@ -4,7 +4,6 @@ import java.util.*;
 
 import org.apache.hc.core5.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,7 @@ import com.ecommerce.managers.repositories.ManagerRepository;
 import com.ecommerce.managers.repositories.ProductBaseRepository;
 import com.ecommerce.managers.services.ProductService;
 
-@RepositoryRestController
+@RestController
 @RequestMapping("/managers")
 public class ManagerController {
 

@@ -3,7 +3,6 @@ package com.ecommerce.sellers.controllers;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,15 +15,13 @@ import com.ecommerce.sellers.models.Store;
 import com.ecommerce.sellers.repositories.PaymentMethodRepository;
 import com.ecommerce.sellers.repositories.SellerRepository;
 
-@RepositoryRestController
+@RestController
 @RequestMapping("/sellers")
 public class SellerController {
 
     @Autowired
     private SellerRepository sellerRepository;
 
-    @Autowired
-    private PaymentMethodRepository paymentMethodRepository;
 
     @PostMapping("/")
     public @ResponseBody ResponseEntity<String> createSeller(@RequestBody SellerDTO sellerDTO) {

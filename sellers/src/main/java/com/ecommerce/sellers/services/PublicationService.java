@@ -1,7 +1,7 @@
 package com.ecommerce.sellers.services;
 
 import org.apache.http.HttpStatus;
-import org.jvnet.hk2.annotations.Service;
+import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;

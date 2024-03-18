@@ -24,8 +24,7 @@ public class SelectedCustomizationType {
 
     @ManyToOne
     @JoinColumn(name = "personalization_id", referencedColumnName = "id")
-    private Personalization possibleCustomizations;
-
+    private Personalization personalization;
 
     public SelectedCustomizationType(String name) {
         this.name = name;

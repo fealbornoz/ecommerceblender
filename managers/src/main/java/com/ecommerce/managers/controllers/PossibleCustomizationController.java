@@ -2,7 +2,6 @@ package com.ecommerce.managers.controllers;
 
 import org.apache.hc.core5.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +10,7 @@ import com.ecommerce.managers.models.PossibleCustomization;
 import com.ecommerce.managers.repositories.CustomizationTypeRepository;
 import com.ecommerce.managers.repositories.PossibleCustomizationRepository;
 
-@RepositoryRestController
+@RestController
 @RequestMapping("/possibleCustomization")
 public class PossibleCustomizationController {
 

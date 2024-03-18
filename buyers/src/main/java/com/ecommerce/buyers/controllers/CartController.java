@@ -3,16 +3,17 @@ package com.ecommerce.buyers.controllers;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.ecommerce.buyers.dtos.ItemDTO;
 import com.ecommerce.buyers.models.*;
 import com.ecommerce.buyers.repositories.BuyerRepository;
 import com.ecommerce.buyers.repositories.CartRepository;
 
-@RepositoryRestController
+
+@RestController
 @RequestMapping("/cart")
 public class CartController {
 
@@ -24,7 +25,7 @@ public class CartController {
 
     @PostMapping("/createItemsInCart/{idBuyer}")
     public @ResponseBody ResponseEntity<String> addItemToCart(@PathVariable("idBuyer") Long idBuyer,
-            @RequestBody Item item) {
+            @RequestBody ItemDTO itemDTO) {
         if (idBuyer == null) {
             return ResponseEntity.badRequest().body("idBuyer is required");
         } else {
@@ -38,9 +39,19 @@ public class CartController {
                 cart = new Cart(buyer);
                 cartRepository.save(cart);
             }
-            cart.addItem(item);
-            cartRepository.save(cart);
-            return ResponseEntity.ok("Item added to cart");
+            Item itemIsExisting = cart.getItems().stream()
+                    .filter(i -> i.getPublicationId().equals(itemDTO.getPublicationId()))
+                    .findFirst().orElse(null);
+            if (itemIsExisting != null) {
+                itemIsExisting.setQuantity(itemIsExisting.getQuantity() + itemDTO.getQuantity());
+                cartRepository.save(cart);
+                return ResponseEntity.ok("Item added to cart");
+            } else {
+                Item newItem = new Item(itemDTO, cart);
+                cart.addItem(newItem);
+                cartRepository.save(cart);
+                return ResponseEntity.ok("Item added to cart");
+            }
 
         }
     }
@@ -61,7 +72,5 @@ public class CartController {
             }
         }
     }
-
-
 
 }

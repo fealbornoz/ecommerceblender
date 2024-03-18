@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.sellers.dtos.PublicationDTO;
 import com.ecommerce.sellers.dtos.StoreDTO;
@@ -20,7 +21,7 @@ import com.ecommerce.sellers.models.Store;
 import com.ecommerce.sellers.repositories.StoreRepository;
 import com.ecommerce.sellers.services.PublicationService;
 
-@RepositoryRestController
+@RestController
 @RequestMapping("/store")
 public class StoreController {
 
@@ -80,8 +81,8 @@ public class StoreController {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("idStore and publicationDTO are required");
         } else {
             try {
-                String message = publicationService.addPublication(idStore, publicationDTO);
-                return ResponseEntity.status(HttpStatus.SC_OK).body(message);
+                ResponseEntity<String> response = publicationService.addPublication(idStore, publicationDTO);
+                return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body(e.getMessage());
             }

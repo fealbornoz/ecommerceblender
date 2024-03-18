@@ -1,7 +1,6 @@
 package com.ecommerce.buyers.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.beans.factory.annotation.Autowired;;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,12 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.buyers.dtos.BuyerDTO;
 import com.ecommerce.buyers.models.Buyer;
 import com.ecommerce.buyers.repositories.BuyerRepository;
 
-@RepositoryRestController
+@RestController
 @RequestMapping("/buyers")
 public class BuyerController {
 
@@ -24,12 +24,12 @@ public class BuyerController {
     private BuyerRepository buyerRepository;
 
     @PostMapping("/")
-    public @ResponseBody ResponseEntity<String> createBuyerUser(@RequestBody BuyerDTO buyer) {
+    public @ResponseBody ResponseEntity<String> createBuyerUser(@RequestBody BuyerDTO buyerDTO) {
 
-        if (buyer.getName() == null || buyer.getLastName() == null) {
+        if (buyerDTO.getName() == null || buyerDTO.getLastName() == null) {
             return ResponseEntity.badRequest().body("name and last name are required");
         } else {
-            Buyer newBuyer = new Buyer(buyer.getName(), buyer.getLastName());
+            Buyer newBuyer = new Buyer(buyerDTO);
             buyerRepository.save(newBuyer);
             return ResponseEntity.ok("Buyer created");
         }
@@ -52,15 +52,15 @@ public class BuyerController {
     }
 
     @PatchMapping("/{id}")
-    public @ResponseBody ResponseEntity<String> updateBuyer(@PathVariable("id") Long id, @RequestBody BuyerDTO buyer) {
+    public @ResponseBody ResponseEntity<String> updateBuyer(@PathVariable("id") Long id, @RequestBody BuyerDTO buyerDTO) {
         if (id == null) {
             return ResponseEntity.badRequest().body("id is required");
         } else if (!buyerRepository.existsById(id)) {
             return ResponseEntity.badRequest().body("Buyer not found");
         } else {
             Buyer buyerToUpdate = buyerRepository.findById(id).get();
-            buyerToUpdate.setName(buyer.getName());
-            buyerToUpdate.setLastName(buyer.getLastName());
+            buyerToUpdate.setName(buyerDTO.getName());
+            buyerToUpdate.setLastName(buyerDTO.getLastName());
             buyerRepository.save(buyerToUpdate);
             return ResponseEntity.ok("Buyer updated");
         }
@@ -79,5 +79,11 @@ public class BuyerController {
             return ResponseEntity.ok("Buyer deleted");
         }
     }
+
+
+    
+
+
+
 
 }

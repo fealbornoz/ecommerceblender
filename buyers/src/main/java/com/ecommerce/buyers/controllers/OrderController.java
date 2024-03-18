@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.buyers.dtos.OrderDTO;
 import com.ecommerce.buyers.models.Order;
@@ -16,7 +17,8 @@ import com.ecommerce.buyers.models.StateOrder;
 import com.ecommerce.buyers.repositories.OrderRepository;
 import com.ecommerce.buyers.service.OrderService;
 
-@RepositoryRestController
+
+@RestController
 @RequestMapping("/orders")
 public class OrderController {
 
@@ -26,43 +28,44 @@ public class OrderController {
     @Autowired
     private OrderRepository orderRepository;
 
-    /*
-     * @PostMapping("/{idBuyer}/{idCart}")
-     * public @ResponseBody ResponseEntity<String>
-     * createOrder(@PathVariable("IdBuyer") Long idBuyer,
-     * 
-     * @PathVariable("idCart") Long idCart, @RequestBody OrderDTO order) {
-     * if (idCart == null || idBuyer == null) {
-     * return ResponseEntity.badRequest().body("idCart is required");
-     * } else {
-     * Cart cart = cartRepository.findById(idCart).get();
-     * Buyer buyer = buyerRepository.findById(idBuyer).get();
-     * Order newOrder = new Order(buyer, order.getStore_id(),
-     * order.getPaymentMethod());
-     * 
-     * 
-     * for (int i = 0; i < cart.getItems().size(); i++) {
-     * Item item = cart.getItems().get(i);
-     * OrderItem orderItem = new OrderItem(item.getNamePublication(),
-     * item.getQuantity(), item.getPrice(),
-     * item.getPublicationId(), order.getStore_id());
-     * newOrder.addOrderItem(orderItem);
-     * 
-     * }
-     * 
-     * orderRepository.save(newOrder);
-     * 
-     * return ResponseEntity.ok("Order created");
-     * }
-     * }
-     */
+   /*  @Autowired
+    private CartRepository cartRepository;
+
+    @Autowired
+    private BuyerRepository buyerRepository; */
+
+   /*  @PostMapping("/{idBuyer}/{idCart}")
+    public @ResponseBody ResponseEntity<String> createOrder(@PathVariable("IdBuyer") Long idBuyer,
+
+            @PathVariable("idCart") Long idCart, @RequestBody OrderDTO orderDTO) {
+        if (idCart == null || idBuyer == null) {
+            return ResponseEntity.badRequest().body("idCart is required");
+        } else {
+            Cart cart = cartRepository.findById(idCart).get();
+            Buyer buyer = buyerRepository.findById(idBuyer).get();
+            Order newOrder = new Order(orderDTO, buyer);
+
+            for (int i = 0; i < cart.getItems().size(); i++) {
+                Item item = cart.getItems().get(i);
+                OrderItem orderItem = new OrderItem(item.getNamePublication(),
+                        item.getQuantity(), item.getPrice(),
+                        item.getPublicationId(), orderDTO.getStore_id());
+                newOrder.addOrderItem(orderItem);
+
+            }
+
+            orderRepository.save(newOrder);
+
+            return ResponseEntity.ok("Order created");
+        }
+    } */
 
     @PostMapping("/{idBuyer}/{idCart}")
     public @ResponseBody ResponseEntity<String> createOrder(@PathVariable("idBuyer") Long idBuyer,
-            @PathVariable("idCart") Long idCart, @RequestBody OrderDTO order) {
+            @PathVariable("idCart") Long idCart, @RequestBody OrderDTO orderDTO) {
 
         try {
-            String message = orderService.createOrder(idBuyer, idCart, order);
+            String message = orderService.createOrder(idBuyer, idCart, orderDTO);
             return ResponseEntity.ok(message);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

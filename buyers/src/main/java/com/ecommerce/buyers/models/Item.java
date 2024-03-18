@@ -1,6 +1,6 @@
 package com.ecommerce.buyers.models;
 
-import com.ecommerce.buyers.dtos.OrderItemDTO;
+import com.ecommerce.buyers.dtos.ItemDTO;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -35,13 +35,13 @@ public class Item {
     @JoinColumn(name = "cart_id", referencedColumnName = "id")
     private Cart cart;
 
-    public Item(OrderItemDTO orderItemDTO,
+    public Item(ItemDTO itemDTO,
             Cart cart) {
-        this.namePublication = orderItemDTO.getNamePublication();
-        this.quantity = orderItemDTO.getQuantity();
-        this.price = orderItemDTO.getPrice();
-        this.publicationId = orderItemDTO.getPublicationId();
-        this.storeId = orderItemDTO.getStoreId();
+        this.namePublication = itemDTO.getNamePublication();
+        this.quantity = itemDTO.getQuantity();
+        this.price = itemDTO.getPrice();
+        this.publicationId = itemDTO.getPublicationId();
+        this.storeId = itemDTO.getStoreId();
         this.cart = cart;
     }
 

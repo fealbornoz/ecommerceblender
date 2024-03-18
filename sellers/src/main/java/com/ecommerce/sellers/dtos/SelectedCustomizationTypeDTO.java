@@ -1,6 +1,5 @@
 package com.ecommerce.sellers.dtos;
 
-import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,5 +8,5 @@ import lombok.Setter;
 @Getter
 public class SelectedCustomizationTypeDTO {
     
-     List<String> names;
+     String name;
 }

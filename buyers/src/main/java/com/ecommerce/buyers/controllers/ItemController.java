@@ -2,14 +2,14 @@ package com.ecommerce.buyers.controllers;
 
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ecommerce.buyers.models.Item;
 import com.ecommerce.buyers.repositories.ItemRepository;
 
-@RepositoryRestController
+
+@RestController
 @RequestMapping("/items")
 public class ItemController {
 

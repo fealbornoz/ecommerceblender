@@ -2,7 +2,6 @@ package com.ecommerce.sellers.models;
 
 import java.time.LocalDateTime;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,8 +37,9 @@ public class Publication {
     @JoinColumn(name = "store_id", referencedColumnName = "id")
     private Store store;
 
-  /*   @OneToOne(mappedBy = "publication")
-    private Sales sale; */
+   @ManyToOne
+    @JoinColumn(name = "seller_id", referencedColumnName = "id")
+    private Seller seller;
 
     public Publication(FinalProduct finalProduct) {
 

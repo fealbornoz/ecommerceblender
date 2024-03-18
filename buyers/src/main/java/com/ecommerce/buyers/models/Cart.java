@@ -25,6 +25,7 @@ public class Cart {
 
 	public Cart(Buyer buyer) {
 		this.buyer = buyer;
+		buyer.setCart(this);
 		this.items = new ArrayList<>();
 	}
 

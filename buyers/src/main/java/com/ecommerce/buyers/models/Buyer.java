@@ -1,6 +1,9 @@
 package com.ecommerce.buyers.models;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.ecommerce.buyers.dtos.BuyerDTO;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -34,10 +37,14 @@ public class Buyer {
     private List<ShippingAddress> shippingAddresses; */
 
 
-    public Buyer(String name, String lastName) {
-        this.name = name;
-        this.lastName = lastName;
+    public Buyer(BuyerDTO buyerDTO) {
+        this.name = buyerDTO.getName();
+        this.lastName = buyerDTO.getLastName();
     }
+
+
+
+
 
 
 }

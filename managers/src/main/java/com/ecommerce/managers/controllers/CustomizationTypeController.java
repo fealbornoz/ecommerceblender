@@ -4,7 +4,6 @@ package com.ecommerce.managers.controllers;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +11,7 @@ import com.ecommerce.managers.dtos.CustomizationTypeDTO;
 import com.ecommerce.managers.models.CustomizationType;
 import com.ecommerce.managers.repositories.CustomizationTypeRepository;
 
-@RepositoryRestController
+@RestController
 @RequestMapping("/customizationType")
 public class CustomizationTypeController {
 

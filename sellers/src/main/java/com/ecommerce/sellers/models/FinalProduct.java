@@ -48,10 +48,6 @@ public class FinalProduct {
     private Publication publication;
 
 
-    // Esto es bidireccionaldiad
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "seller_id", referencedColumnName = "id")
-    private Seller seller;
 
     @OneToMany(mappedBy = "finalProduct")
     private Set<Personalization> personalizations;
@@ -63,7 +59,6 @@ public class FinalProduct {
         this.description = finalProduct.getDescription();
         this.price = finalProduct.getPrice();
         this.manufacturingTime = finalProduct.getManufacturingTime();
-        this.seller = Seller;
         this.personalizations = new HashSet<>();
     }
 

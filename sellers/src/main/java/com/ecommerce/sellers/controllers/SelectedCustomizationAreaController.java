@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +12,7 @@ import com.ecommerce.sellers.models.SelectedCustomizationArea;
 import com.ecommerce.sellers.repositories.SelectedCustomizationAreaRepository;
 
 
-@RepositoryRestController
+@RestController
 @RequestMapping("/selectedCustomizationArea")
 public class SelectedCustomizationAreaController {
 

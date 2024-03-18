@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +11,7 @@ import com.ecommerce.managers.dtos.ProductBaseDTO;
 import com.ecommerce.managers.models.*;
 import com.ecommerce.managers.repositories.*;
 
-@RepositoryRestController
+@RestController
 // Esta es la ruta general para acceder a este controlador
 @RequestMapping("/productBase")
 public class ProductBaseController {
