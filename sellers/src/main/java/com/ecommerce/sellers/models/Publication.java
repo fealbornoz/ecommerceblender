@@ -37,9 +37,6 @@ public class Publication {
     @JoinColumn(name = "store_id", referencedColumnName = "id")
     private Store store;
 
-   @ManyToOne
-    @JoinColumn(name = "seller_id", referencedColumnName = "id")
-    private Seller seller;
 
     public Publication(FinalProduct finalProduct) {
 

@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import com.ecommerce.sellers.models.Publication;
-import com.ecommerce.sellers.models.Seller;
+import com.ecommerce.sellers.models.Store;
 
 @RepositoryRestResource(path = "publication")
 public interface PublicationRepository extends JpaRepository<Publication, Long>{
 
 
-    List<Publication> findBySeller(Seller seller);
+    List<Publication> findAllByStoreId(Store storeId);
 }

@@ -17,11 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.sellers.dtos.PublicationDTO;
 import com.ecommerce.sellers.models.Publication;
-import com.ecommerce.sellers.models.Seller;
+import com.ecommerce.sellers.models.Store;
 import com.ecommerce.sellers.repositories.PublicationRepository;
-import com.ecommerce.sellers.repositories.SellerRepository;
-import com.netflix.discovery.converters.Auto;
-
+import com.ecommerce.sellers.repositories.StoreRepository;
 @RestController
 @RequestMapping("/publication")
 
@@ -31,18 +29,17 @@ public class PublicationController {
     private PublicationRepository publicationRepository;
 
     @Autowired
-    private SellerRepository sellerRepository;
-
-    @GetMapping("/seller/{sellerId}")
-    public @ResponseBody ResponseEntity<Object> getPublicationsBySeller(@PathVariable("sellerId") Long sellerId) {
-        if (sellerId == null) {
+    private StoreRepository storeRepository;
+    @GetMapping("/seller/{storeId}")
+    public @ResponseBody ResponseEntity<Object> getPublicationsByStore(@PathVariable("sellerId") Long storeId) {
+        if (storeId == null) {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Seller id is required");
         } else {
-            Optional<Seller> seller = sellerRepository.findById(sellerId);
-            if (!seller.isPresent()) {
+            Optional<Store> storeOptional = storeRepository.findById(storeId);
+            if (!storeOptional.isPresent()) {
                 return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("Seller not found");
             } else {
-                List<Publication> publications = publicationRepository.findBySeller(seller.get());
+                List<Publication> publications = publicationRepository.findAllByStoreId(storeOptional.get());
                 return ResponseEntity.status(HttpStatus.SC_OK).body(publications);
 
             }
