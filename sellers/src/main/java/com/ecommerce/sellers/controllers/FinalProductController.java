@@ -20,7 +20,7 @@ import com.ecommerce.sellers.repositories.PersonalizationRepository;
 import com.ecommerce.sellers.repositories.SellerRepository;
 
 @RepositoryRestController
-@RequestMapping("/publication")
+@RequestMapping("/finalProduct")
 public class FinalProductController {
 
     @Autowired

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ecommerce.buyers.dtos.OrderItemDTO;
@@ -13,13 +14,14 @@ import com.ecommerce.buyers.models.OrderItem;
 import com.ecommerce.buyers.repositories.OrderItemRepository;
 
 @RepositoryRestController
+@RequestMapping("/orderItems")
 public class OrderItemController {
 
 
     @Autowired
     private OrderItemRepository orderItemRepository;
 
-    @PatchMapping("/orderItems/{id}")
+    @PatchMapping("/{id}")
     public @ResponseBody ResponseEntity<String> setOrderItem(@PathVariable("id") Long id, OrderItemDTO orderItemDTO) {
 
         if (id == null) {
@@ -38,7 +40,7 @@ public class OrderItemController {
     }
 
 
-    @DeleteMapping("/orderItems/{id}")
+    @DeleteMapping("/{id}")
     public @ResponseBody ResponseEntity<String> deleteOrderItem(@PathVariable("id") Long id) {
         if (id == null) {
             return ResponseEntity.badRequest().body("id is required");

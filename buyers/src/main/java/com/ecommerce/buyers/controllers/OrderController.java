@@ -11,17 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ecommerce.buyers.dtos.OrderDTO;
-import com.ecommerce.buyers.models.Buyer;
-import com.ecommerce.buyers.models.Cart;
-import com.ecommerce.buyers.models.Item;
 import com.ecommerce.buyers.models.Order;
-import com.ecommerce.buyers.models.OrderItem;
 import com.ecommerce.buyers.models.StateOrder;
-import com.ecommerce.buyers.repositories.BuyerRepository;
-import com.ecommerce.buyers.repositories.CartRepository;
 import com.ecommerce.buyers.repositories.OrderRepository;
 import com.ecommerce.buyers.service.OrderService;
-import com.netflix.discovery.converters.Auto;
 
 @RepositoryRestController
 @RequestMapping("/orders")

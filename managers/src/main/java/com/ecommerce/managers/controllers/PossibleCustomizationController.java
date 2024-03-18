@@ -7,8 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
-import com.ecommerce.managers.dtos.PossibleCustomizationDTO;
-import com.ecommerce.managers.models.CustomizationType;
 import com.ecommerce.managers.models.PossibleCustomization;
 import com.ecommerce.managers.repositories.CustomizationTypeRepository;
 import com.ecommerce.managers.repositories.PossibleCustomizationRepository;

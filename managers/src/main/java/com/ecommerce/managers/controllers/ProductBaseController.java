@@ -1,7 +1,6 @@
 package com.ecommerce.managers.controllers;
 
 import java.util.Optional;
-import java.util.Set;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
