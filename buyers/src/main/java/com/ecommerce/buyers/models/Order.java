@@ -33,7 +33,7 @@ public class Order {
     @Column(name = "state_order", columnDefinition = "VARCHAR(15)")
     private StateOrder stateOrder;
 
-    @OneToMany(mappedBy = "order_item")
+    @OneToMany(mappedBy = "order")
     private List<OrderItem> orderItems;
 
     public Order(Buyer buyer, Integer store_id, String paymentMethod) {
