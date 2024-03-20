@@ -12,7 +12,6 @@ import com.ecommerce.buyers.models.*;
 import com.ecommerce.buyers.repositories.BuyerRepository;
 import com.ecommerce.buyers.repositories.CartRepository;
 
-
 @RestController
 @RequestMapping("/cart")
 public class CartController {
@@ -26,7 +25,8 @@ public class CartController {
     @PostMapping("/createItemsInCart/{idBuyer}")
     public @ResponseBody ResponseEntity<String> addItemToCart(@PathVariable("idBuyer") Long idBuyer,
             @RequestBody ItemDTO itemDTO) {
-        if (idBuyer == null) {
+        if (idBuyer == null || itemDTO.getNamePublication() == null || itemDTO.getPublicationId() == null
+                || itemDTO.getQuantity() == null || itemDTO.getPrice() == null || itemDTO.getStoreId() == null) {
             return ResponseEntity.badRequest().body("idBuyer is required");
         } else {
             Cart cart;
@@ -65,10 +65,17 @@ public class CartController {
             if (!cart.isPresent()) {
                 return ResponseEntity.notFound().build();
             } else {
-                List<Item> items = cart.get().getItems();
-                items.clear();
-                cartRepository.save(cart.get());
-                return ResponseEntity.ok("Cart cleared");
+                Cart cartIsExisting = cart.get();
+                if (cartIsExisting.getItems().isEmpty()) {
+                    return ResponseEntity.ok("Cart is already empty");
+                } else {
+                    List<Item> items = cart.get().getItems();
+                    items.clear();
+                    cartRepository.save(cartIsExisting);
+                    return ResponseEntity.ok("Cart cleared");
+
+                }
+
             }
         }
     }

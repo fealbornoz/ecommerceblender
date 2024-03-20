@@ -66,7 +66,7 @@ public class CustomizationTypeController {
 
 
     @PatchMapping("/{id}")
-    public @ResponseBody ResponseEntity<String> updateCustomizationType(@PathVariable("id") Long id,
+    public @ResponseBody ResponseEntity<String> setCustomizationType(@PathVariable("id") Long id,
             @RequestBody CustomizationTypeDTO customizationType) {
 
         if (id == null) {

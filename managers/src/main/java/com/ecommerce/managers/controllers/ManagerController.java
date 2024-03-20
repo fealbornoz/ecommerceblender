@@ -25,17 +25,16 @@ public class ManagerController {
     @Autowired
     private ProductBaseRepository productBaseRepository;
 
-
     @Autowired
     private ProductService productService;
 
     @PostMapping("/")
-    public @ResponseBody ResponseEntity<String> createManager(@RequestBody ManagerDTO manager) {
+    public @ResponseBody ResponseEntity<String> createManager(@RequestBody ManagerDTO managerDTO) {
 
-        if (manager.getName().isEmpty() || manager.getLastName().isEmpty()) {
+        if (managerDTO.getName().isEmpty() || managerDTO.getLastName().isEmpty()) {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Name and last name are required.");
         } else {
-            Manager newManager = new Manager(manager.getName(), manager.getLastName());
+            Manager newManager = new Manager(managerDTO);
 
             managerRepository.save(newManager);
 
@@ -61,10 +60,10 @@ public class ManagerController {
         } else {
             Optional<Manager> manager = managerRepository.findById(id);
 
-            if (manager.isEmpty()) {
+            if (!manager.isPresent()) {
                 return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("Manager not found");
             } else {
-                return ResponseEntity.status(HttpStatus.SC_OK).body(manager);
+                return ResponseEntity.status(HttpStatus.SC_OK).body(manager.get());
             }
         }
 
@@ -72,7 +71,7 @@ public class ManagerController {
 
     @PatchMapping("/{id}")
     public @ResponseBody ResponseEntity<String> updateManager(@PathVariable("id") Long id,
-            @RequestBody ManagerDTO manager) {
+            @RequestBody ManagerDTO managerDTO) {
 
         if (id == null) {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Id is required");
@@ -83,8 +82,8 @@ public class ManagerController {
                 return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("Manager not found");
             } else {
                 Manager managerToUpdate = existingManager.get();
-                managerToUpdate.setName(manager.getName());
-                managerToUpdate.setLastName(manager.getLastName());
+                managerToUpdate.setName(managerDTO.getName());
+                managerToUpdate.setLastName(managerDTO.getLastName());
 
                 managerRepository.save(managerToUpdate);
 
@@ -101,7 +100,7 @@ public class ManagerController {
         } else {
             Optional<Manager> existingManager = managerRepository.findById(id);
 
-            if (existingManager.isEmpty()) {
+            if (!existingManager.isPresent()) {
                 return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("Manager not found");
             } else {
 
@@ -111,67 +110,71 @@ public class ManagerController {
         }
     }
 
-
-
     @PostMapping("/{idManager}/productBase")
     public @ResponseBody ResponseEntity<String> createProductBase(@PathVariable("idManager") Long id,
-            @RequestBody ProductBaseDTO productBase) {
+            @RequestBody ProductBaseDTO productBaseDTO) {
 
-        if (productBase.getName().isEmpty() || productBase.getDescription().isEmpty() || productBase.getPrice() == null
-                || productBase.getManufacturingTime() == null || id == null) {
+        if (productBaseDTO.getName().isEmpty() || productBaseDTO.getDescription().isEmpty()
+                || productBaseDTO.getPrice() == null
+                || productBaseDTO.getManufacturingTime() == null || id == null) {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("All fields are required.");
         } else {
-            ProductBase newProductBase = productService.createProductBaseAndCustomizations(id, productBase);
+            ProductBase newProductBase = productService.createProductBaseAndCustomizations(id, productBaseDTO);
             return ResponseEntity.status(HttpStatus.SC_CREATED)
                     .body("Product base created, id: " + newProductBase.getId());
         }
     }
 
-    /* @PostMapping("/{idManager}/productBase")
-    public @ResponseBody ResponseEntity<String> createProductBase(@PathVariable("idManager") Long id,
-            @RequestBody ProductBaseDTO productBase) {
-
-        if (productBase.getName().isEmpty() || productBase.getDescription().isEmpty() || productBase.getPrice() == null
-                || productBase.getManufacturingTime() == null || id == null) {
-            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("All fields are required.");
-        } else {
-
-
-            List<PossibleCustomization> possibleCustomizations = productBase.getPossibleCustomizations().stream()
-                    .map(customizationDTO -> {
-                        PossibleCustomization possibleCustomization = new PossibleCustomization(
-                                customizationDTO.getCustomizationArea());
-
-                        customizationDTO.getCustomizationTypes().stream()
-                                .forEach(customizationTypeDTO -> {
-                                    CustomizationType customizationType = new CustomizationType(
-                                            customizationTypeDTO.getName());
-                                    possibleCustomization.addCustomizationType(customizationType);
-                                });
-
-                        return possibleCustomizationRepository.save(possibleCustomization);
-                    })
-                    .collect(Collectors.toList());
-
-            ProductBase newProductBase = new ProductBase(productBase.getName(), productBase.getDescription(),
-                    productBase.getPrice(), productBase.getManufacturingTime());
-
-            possibleCustomizations.stream().forEach(possibleCustomization -> {
-                newProductBase.addPossibleCustomization(possibleCustomization);
-            });
-
-            Manager managerFound = managerRepository.findById(id).get();
-            managerFound.addProductBase(newProductBase);
-
-            managerRepository.save(managerFound);
-
-            return ResponseEntity.status(HttpStatus.SC_CREATED)
-                    .body("Product base created, id: " + newProductBase.getId());
-        }
-    } */
-
-
-
+    /*
+     * @PostMapping("/{idManager}/productBase")
+     * public @ResponseBody ResponseEntity<String>
+     * createProductBase(@PathVariable("idManager") Long id,
+     * 
+     * @RequestBody ProductBaseDTO productBase) {
+     * 
+     * if (productBase.getName().isEmpty() || productBase.getDescription().isEmpty()
+     * || productBase.getPrice() == null
+     * || productBase.getManufacturingTime() == null || id == null) {
+     * return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).
+     * body("All fields are required.");
+     * } else {
+     * 
+     * 
+     * List<PossibleCustomization> possibleCustomizations =
+     * productBase.getPossibleCustomizations().stream()
+     * .map(customizationDTO -> {
+     * PossibleCustomization possibleCustomization = new PossibleCustomization(
+     * customizationDTO.getCustomizationArea());
+     * 
+     * customizationDTO.getCustomizationTypes().stream()
+     * .forEach(customizationTypeDTO -> {
+     * CustomizationType customizationType = new CustomizationType(
+     * customizationTypeDTO.getName());
+     * possibleCustomization.addCustomizationType(customizationType);
+     * });
+     * 
+     * return possibleCustomizationRepository.save(possibleCustomization);
+     * })
+     * .collect(Collectors.toList());
+     * 
+     * ProductBase newProductBase = new ProductBase(productBase.getName(),
+     * productBase.getDescription(),
+     * productBase.getPrice(), productBase.getManufacturingTime());
+     * 
+     * possibleCustomizations.stream().forEach(possibleCustomization -> {
+     * newProductBase.addPossibleCustomization(possibleCustomization);
+     * });
+     * 
+     * Manager managerFound = managerRepository.findById(id).get();
+     * managerFound.addProductBase(newProductBase);
+     * 
+     * managerRepository.save(managerFound);
+     * 
+     * return ResponseEntity.status(HttpStatus.SC_CREATED)
+     * .body("Product base created, id: " + newProductBase.getId());
+     * }
+     * }
+     */
 
     @DeleteMapping("/{idManager}/productBase/{idProductBase}")
     public @ResponseBody ResponseEntity<String> deleteProductBase(@PathVariable("idManager") Long idManager,
@@ -182,13 +185,13 @@ public class ManagerController {
         } else {
             Optional<Manager> managerOptional = managerRepository.findById(idManager);
             Optional<ProductBase> productBaseOptional = productBaseRepository.findById(idProductBase);
-            if (managerOptional.isPresent() && productBaseOptional.isPresent()) {
+            if (!managerOptional.isPresent() && !productBaseOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("Manager or product base not found");
+            } else {
                 Manager manager = managerOptional.get();
                 ProductBase productBase = productBaseOptional.get();
                 manager.removeProductBase(productBase);
                 return ResponseEntity.status(HttpStatus.SC_OK).body("Product base deleted");
-            } else {
-                return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("Product base not found");
             }
         }
     }

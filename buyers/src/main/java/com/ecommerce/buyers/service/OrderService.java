@@ -34,21 +34,21 @@ public class OrderService {
     }
 
     private Cart getCart(Long idCart) {
-        if(idCart == null){
+        if (idCart == null) {
             throw new IllegalArgumentException("idCart is required");
-        }else{
+        } else {
             return cartRepository.findById(idCart)
-            .orElseThrow(() -> new IllegalArgumentException("Cart not found"));
+                    .orElseThrow(() -> new IllegalArgumentException("Cart not found"));
         }
     }
 
     private Buyer getBuyer(Long idBuyer) {
-        if(idBuyer == null){
+        if (idBuyer == null) {
             throw new IllegalArgumentException("idBuyer is required");
-            
-        }else{
+
+        } else {
             return buyerRepository.findById(idBuyer)
-            .orElseThrow(() -> new IllegalArgumentException("Buyer not found"));
+                    .orElseThrow(() -> new IllegalArgumentException("Buyer not found"));
         }
 
     }
@@ -60,6 +60,4 @@ public class OrderService {
         });
     }
 
-
-    
 }

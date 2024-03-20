@@ -53,22 +53,19 @@ public class ProductBaseController {
         } else {
             Optional<ProductBase> productBaseToUpdate = productBaseRepository.findById(id);
 
-            if (productBaseToUpdate.isPresent()) {
+            if (!productBaseToUpdate.isPresent()) {
+                return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("Product base not found");
+            } else {
                 ProductBase productBaseUpdated = productBaseToUpdate.get();
                 productBaseUpdated.update(productBase);
                 productBaseRepository.save(productBaseUpdated);
 
                 return ResponseEntity.status(HttpStatus.SC_OK)
                         .body("Product base updated, id: " + productBaseUpdated.getId());
-            } else {
-                return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("Product base not found");
+
             }
         }
 
     }
-
-
-
-
 
 }

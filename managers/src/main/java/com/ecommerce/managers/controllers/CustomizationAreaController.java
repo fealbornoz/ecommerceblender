@@ -17,21 +17,26 @@ public class CustomizationAreaController {
     @Autowired
     private CustomizationAreaRepository customizationAreaRepository;
 
-   /*  @PostMapping("/")
-    public @ResponseBody ResponseEntity<String> createCustomizationArea(
-            @RequestBody CustomizationAreaDTO customizationArea) {
-
-        if (customizationArea.getName().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Name is required.");
-        } else {
-            CustomizationArea newCustomizationArea = new CustomizationArea(customizationArea.getName());
-
-            customizationAreaRepository.save(newCustomizationArea);
-
-            return ResponseEntity.status(HttpStatus.SC_CREATED)
-                    .body("Customization area created, id: " + newCustomizationArea.getId());
-        }
-    } */
+    /*
+     * @PostMapping("/")
+     * public @ResponseBody ResponseEntity<String> createCustomizationArea(
+     * 
+     * @RequestBody CustomizationAreaDTO customizationArea) {
+     * 
+     * if (customizationArea.getName().isEmpty()) {
+     * return
+     * ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Name is required.");
+     * } else {
+     * CustomizationArea newCustomizationArea = new
+     * CustomizationArea(customizationArea.getName());
+     * 
+     * customizationAreaRepository.save(newCustomizationArea);
+     * 
+     * return ResponseEntity.status(HttpStatus.SC_CREATED)
+     * .body("Customization area created, id: " + newCustomizationArea.getId());
+     * }
+     * }
+     */
 
     @GetMapping("/")
     public @ResponseBody ResponseEntity<Object> getAllCustomizationArea() {
@@ -74,16 +79,13 @@ public class CustomizationAreaController {
             } else {
                 CustomizationArea customizationAreaEntity = customizationAreaOpt.get();
 
-                if (customizationArea.getName() != null) {
-                    customizationAreaEntity.setName(customizationArea.getName());
-                    customizationAreaRepository.save(customizationAreaEntity);
-                }
+                customizationAreaEntity.setName(customizationArea.getName());
+                customizationAreaRepository.save(customizationAreaEntity);
 
                 return ResponseEntity.status(HttpStatus.SC_OK).body("Customization Area updated, id: " + id);
             }
         }
     }
-
 
     @DeleteMapping("/{id}")
     public @ResponseBody ResponseEntity<String> deleteCustomizationArea(@PathVariable Long id) {

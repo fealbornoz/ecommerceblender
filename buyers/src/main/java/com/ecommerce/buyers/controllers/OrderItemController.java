@@ -1,5 +1,7 @@
 package com.ecommerce.buyers.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,28 +19,33 @@ import com.ecommerce.buyers.repositories.OrderItemRepository;
 @RequestMapping("/orderItems")
 public class OrderItemController {
 
-
     @Autowired
     private OrderItemRepository orderItemRepository;
 
     @PatchMapping("/{id}")
     public @ResponseBody ResponseEntity<String> setOrderItem(@PathVariable("id") Long id, OrderItemDTO orderItemDTO) {
 
-        if (id == null) {
+        if (id == null || orderItemDTO.getNamePublication() == null || orderItemDTO.getPrice() == null
+                || orderItemDTO.getQuantity() == null || orderItemDTO.getPublicationId() == null
+                || orderItemDTO.getStoreId() == null) {
             return ResponseEntity.badRequest().body("id is required");
         } else {
-            OrderItem orderItem = orderItemRepository.findById(id).get();
-            orderItem.setNamePublication(orderItemDTO.getNamePublication());
-            orderItem.setPrice(orderItemDTO.getPrice());
-            orderItem.setQuantity(orderItemDTO.getQuantity());
-            orderItem.setPublicationId(orderItemDTO.getPublicationId());
-            orderItem.setStoreId(orderItemDTO.getStoreId());
-            orderItemRepository.save(orderItem);
-            return ResponseEntity.ok("OrderItem updated");
+            Optional<OrderItem> orderItemOptional = orderItemRepository.findById(id);
+            if(!orderItemOptional.isPresent()) {
+                return ResponseEntity.badRequest().body("OrderItem not found");
+            }else{
+                OrderItem orderItem = orderItemRepository.findById(id).get();
+                orderItem.setNamePublication(orderItemDTO.getNamePublication());
+                orderItem.setPrice(orderItemDTO.getPrice());
+                orderItem.setQuantity(orderItemDTO.getQuantity());
+                orderItem.setPublicationId(orderItemDTO.getPublicationId());
+                orderItem.setStoreId(orderItemDTO.getStoreId());
+                orderItemRepository.save(orderItem);
+                return ResponseEntity.ok("OrderItem updated");
+            }
         }
 
     }
-
 
     @DeleteMapping("/{id}")
     public @ResponseBody ResponseEntity<String> deleteOrderItem(@PathVariable("id") Long id) {
@@ -49,8 +56,5 @@ public class OrderItemController {
             return ResponseEntity.ok("OrderItem deleted");
         }
     }
-
-
-
 
 }

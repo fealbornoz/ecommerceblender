@@ -12,7 +12,7 @@ import com.ecommerce.sellers.dtos.StoreDTO;
 import com.ecommerce.sellers.models.PaymentMethod;
 import com.ecommerce.sellers.models.Seller;
 import com.ecommerce.sellers.models.Store;
-import com.ecommerce.sellers.repositories.PaymentMethodRepository;
+/* import com.ecommerce.sellers.repositories.PaymentMethodRepository; */
 import com.ecommerce.sellers.repositories.SellerRepository;
 
 @RestController
@@ -22,11 +22,10 @@ public class SellerController {
     @Autowired
     private SellerRepository sellerRepository;
 
-
     @PostMapping("/")
     public @ResponseBody ResponseEntity<String> createSeller(@RequestBody SellerDTO sellerDTO) {
 
-        if (sellerDTO.getName() == null || sellerDTO.getLastName() == null || sellerDTO.getEmail() == null) {
+        if (sellerDTO.getName() == null || sellerDTO.getLastName() == null) {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("name and email are required");
         } else {
 
@@ -41,14 +40,17 @@ public class SellerController {
 
     @GetMapping("/")
     public @ResponseBody ResponseEntity<Object> getSellers() {
-
-        return ResponseEntity.status(HttpStatus.SC_OK).body(sellerRepository.findAll());
+        if (sellerRepository.findAll().isEmpty())
+            return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("No sellers found");
+        else {
+            return ResponseEntity.status(HttpStatus.SC_OK).body(sellerRepository.findAll());
+        }
     }
 
     // Esto es para que el gestor, gestione a los vendedores y los pueda activar o
     // desactivar.
     @PatchMapping("/{id}")
-    public @ResponseBody ResponseEntity<String> updateSellerIsActive(@PathVariable Long id,
+    public @ResponseBody ResponseEntity<String> updateSellerIsActive(@PathVariable("id") Long id,
             @RequestBody Boolean isActive) {
 
         if (id == null) {
@@ -72,7 +74,7 @@ public class SellerController {
     public @ResponseBody ResponseEntity<String> addPaymentMethod(@PathVariable("id") Long id,
             @RequestBody PaymentMethodDTO paymentMethodDTO) {
 
-        if (id == null || paymentMethodDTO == null) {
+        if (id == null || paymentMethodDTO.getName().isEmpty()) {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("id and paymentMethods are required");
         } else {
             Optional<Seller> sellerToUpdate = sellerRepository.findById(id);
@@ -111,9 +113,5 @@ public class SellerController {
         }
 
     }
-
-
-
-
 
 }

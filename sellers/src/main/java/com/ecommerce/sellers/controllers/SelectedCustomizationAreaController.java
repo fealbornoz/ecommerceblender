@@ -11,46 +11,54 @@ import com.ecommerce.sellers.dtos.SelectedCustomizationAreaDTO;
 import com.ecommerce.sellers.models.SelectedCustomizationArea;
 import com.ecommerce.sellers.repositories.SelectedCustomizationAreaRepository;
 
-
 @RestController
 @RequestMapping("/selectedCustomizationArea")
 public class SelectedCustomizationAreaController {
 
-
-
     @Autowired
     private SelectedCustomizationAreaRepository selectedCustomizationAreaRepository;
-    
-    @PatchMapping("/{id}")
-    public @ResponseBody ResponseEntity<String> updateSelectedCustomizationArea(@PathVariable Long id, @RequestBody SelectedCustomizationAreaDTO selectedCustomizationAreaDTO) {
 
-        if (id == null || selectedCustomizationAreaDTO == null) {
-            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("id and selectedCustomizationAreaDTO are required");
+    @PatchMapping("/{id}")
+    public @ResponseBody ResponseEntity<String> updateSelectedCustomizationArea(@PathVariable("id") Long id,
+            @RequestBody SelectedCustomizationAreaDTO selectedCustomizationAreaDTO) {
+
+        if (id == null || selectedCustomizationAreaDTO.getName() == null) {
+            return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST)
+                    .body("id and selectedCustomizationAreaDTO are required");
         } else {
-            Optional<SelectedCustomizationArea> selectedCustomizationAreaToUpdate = selectedCustomizationAreaRepository.findById(id);
-            if (selectedCustomizationAreaToUpdate.isPresent()) {
-                selectedCustomizationAreaToUpdate.get().setName(selectedCustomizationAreaDTO.getName());
-                selectedCustomizationAreaRepository.save(selectedCustomizationAreaToUpdate.get());
-                return ResponseEntity.status(HttpStatus.SC_OK).body("SelectedCustomizationArea updated");
-            } else {
+            Optional<SelectedCustomizationArea> selectedCustomizationAreaToUpdate = selectedCustomizationAreaRepository
+                    .findById(id);
+            if (!selectedCustomizationAreaToUpdate.isPresent()) {
                 return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("SelectedCustomizationArea not found");
+            } else {
+                SelectedCustomizationArea selectedCustomizationArea = selectedCustomizationAreaToUpdate.get();
+                selectedCustomizationArea.setName(selectedCustomizationAreaDTO.getName());
+                selectedCustomizationAreaRepository.save(selectedCustomizationArea);
+                return ResponseEntity.status(HttpStatus.SC_OK).body("SelectedCustomizationArea updated");
+
             }
         }
     }
 
-
     @DeleteMapping("/{id}")
-    public @ResponseBody ResponseEntity<String> deleteSelectedCustomizationArea(@PathVariable Long id) {
+    public @ResponseBody ResponseEntity<String> deleteSelectedCustomizationArea(@PathVariable("id") Long id) {
 
         if (id == null) {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("id is required");
         } else {
-            Optional<SelectedCustomizationArea> selectedCustomizationAreaToDelete = selectedCustomizationAreaRepository.findById(id);
-            if (selectedCustomizationAreaToDelete.isPresent()) {
-                selectedCustomizationAreaRepository.delete(selectedCustomizationAreaToDelete.get());
-                return ResponseEntity.status(HttpStatus.SC_OK).body("SelectedCustomizationArea deleted");
-            } else {
+            Optional<SelectedCustomizationArea> selectedCustomizationAreaToDelete = selectedCustomizationAreaRepository
+                    .findById(id);
+            if (!selectedCustomizationAreaToDelete.isPresent()) {
                 return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("SelectedCustomizationArea not found");
+            } else {
+                SelectedCustomizationArea selectedCustomizationArea = selectedCustomizationAreaToDelete.get();
+                if (selectedCustomizationArea != null) {
+
+                    selectedCustomizationAreaRepository.delete(selectedCustomizationArea);
+                    return ResponseEntity.status(HttpStatus.SC_OK).body("SelectedCustomizationArea deleted");
+                } else {
+                    return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("SelectedCustomizationArea not found");
+                }
             }
         }
     }

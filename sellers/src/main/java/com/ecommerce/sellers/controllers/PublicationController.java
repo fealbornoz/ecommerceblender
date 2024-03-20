@@ -20,6 +20,7 @@ import com.ecommerce.sellers.models.Publication;
 import com.ecommerce.sellers.models.Store;
 import com.ecommerce.sellers.repositories.PublicationRepository;
 import com.ecommerce.sellers.repositories.StoreRepository;
+
 @RestController
 @RequestMapping("/publication")
 
@@ -30,8 +31,9 @@ public class PublicationController {
 
     @Autowired
     private StoreRepository storeRepository;
+
     @GetMapping("/seller/{storeId}")
-    public @ResponseBody ResponseEntity<Object> getPublicationsByStore(@PathVariable("sellerId") Long storeId) {
+    public @ResponseBody ResponseEntity<Object> getPublicationsByStore(@PathVariable("storeId") Long storeId) {
         if (storeId == null) {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Seller id is required");
         } else {
@@ -53,10 +55,11 @@ public class PublicationController {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Id is required");
         } else {
             Optional<Publication> publication = publicationRepository.findById(id);
-            if (publication.isPresent()) {
-                return ResponseEntity.status(HttpStatus.SC_OK).body(publication.get());
-            } else {
+            if (!publication.isPresent()) {
                 return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("Publication not found");
+            } else {
+                return ResponseEntity.status(HttpStatus.SC_OK).body(publication.get());
+
             }
         }
     }
@@ -65,7 +68,7 @@ public class PublicationController {
     public @ResponseBody ResponseEntity<String> setPublication(@PathVariable("id") Long id,
             @RequestBody PublicationDTO publicationDTO) {
 
-        if (id == null || publicationDTO == null) {
+        if (id == null || publicationDTO.getState() == null || publicationDTO.getSalesCount() == null) {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("id and name are required");
         } else {
             Optional<Publication> publicationToUpdate = publicationRepository.findById(id);
@@ -93,8 +96,14 @@ public class PublicationController {
             if (!publicationToDelete.isPresent()) {
                 return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("Publication not found");
             } else {
-                publicationRepository.delete(publicationToDelete.get());
-                return ResponseEntity.status(HttpStatus.SC_OK).body("Publication deleted");
+                Publication publication = publicationToDelete.get();
+                if (publication != null) {
+                    publicationRepository.delete(publication);
+                    return ResponseEntity.status(HttpStatus.SC_OK).body("Publication deleted");
+                }
+                else{
+                    return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("Failed to delete Publication");
+                }
             }
         }
     }

@@ -1,5 +1,7 @@
 package com.ecommerce.buyers.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +40,11 @@ public class BuyerController {
 
     @GetMapping("/")
     public @ResponseBody ResponseEntity<Object> getAllBuyers() {
-        return ResponseEntity.ok(buyerRepository.findAll());
+        if (buyerRepository.findAll().isEmpty())
+            return ResponseEntity.badRequest().body("No buyers found");
+        else {
+            return ResponseEntity.ok(buyerRepository.findAll());
+        }
     }
 
     @GetMapping("/{id}")
@@ -48,42 +54,42 @@ public class BuyerController {
         } else if (!buyerRepository.existsById(id)) {
             return ResponseEntity.badRequest().body("Buyer not found");
         } else
-            return ResponseEntity.ok(buyerRepository.findById(id));
+            return ResponseEntity.ok(buyerRepository.findById(id).get());
     }
 
     @PatchMapping("/{id}")
-    public @ResponseBody ResponseEntity<String> updateBuyer(@PathVariable("id") Long id, @RequestBody BuyerDTO buyerDTO) {
-        if (id == null) {
+    public @ResponseBody ResponseEntity<String> updateBuyer(@PathVariable("id") Long id,
+            @RequestBody BuyerDTO buyerDTO) {
+        if (id == null || buyerDTO.getName() == null || buyerDTO.getLastName() == null) {
             return ResponseEntity.badRequest().body("id is required");
-        } else if (!buyerRepository.existsById(id)) {
-            return ResponseEntity.badRequest().body("Buyer not found");
         } else {
-            Buyer buyerToUpdate = buyerRepository.findById(id).get();
-            buyerToUpdate.setName(buyerDTO.getName());
-            buyerToUpdate.setLastName(buyerDTO.getLastName());
-            buyerRepository.save(buyerToUpdate);
-            return ResponseEntity.ok("Buyer updated");
+            Optional<Buyer> buyer = buyerRepository.findById(id);
+
+            if (!buyer.isPresent()) {
+                return ResponseEntity.badRequest().body("Buyer not found");
+            } else {
+                Buyer buyerToUpdate = buyer.get();
+                buyerToUpdate.setName(buyerDTO.getName());
+                buyerToUpdate.setLastName(buyerDTO.getLastName());
+                buyerRepository.save(buyerToUpdate);
+                return ResponseEntity.ok("Buyer updated");
+            }
         }
     }
-
-
 
     @DeleteMapping("/{id}")
     public @ResponseBody ResponseEntity<String> deleteBuyer(@PathVariable("id") Long id) {
         if (id == null) {
             return ResponseEntity.badRequest().body("id is required");
-        } else if (!buyerRepository.existsById(id)) {
-            return ResponseEntity.badRequest().body("Buyer not found");
         } else {
-            buyerRepository.deleteById(id);
-            return ResponseEntity.ok("Buyer deleted");
+            Optional<Buyer> buyer = buyerRepository.findById(id);
+            if (!buyer.isPresent()) {
+                return ResponseEntity.badRequest().body("Buyer not found");
+            } else {
+                buyerRepository.deleteById(id);
+                return ResponseEntity.ok("Buyer deleted");
+            }
         }
     }
-
-
-    
-
-
-
 
 }

@@ -1,7 +1,8 @@
 package com.ecommerce.buyers.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -78,22 +79,28 @@ public class OrderController {
         if (id == null) {
             return ResponseEntity.badRequest().body("id is required");
         } else {
-            Order orderToUpdate = orderRepository.findById(id).get();
-            if (orderToUpdate.getStateOrder().equals(StateOrder.CANCELLED)) {
-                orderToUpdate.setStateOrder(StateOrder.CANCELLED);
-                return ResponseEntity.badRequest().body("Order is already cancelled");
-            } else if (orderToUpdate.getStateOrder().equals(StateOrder.DISPATCHED)) {
-                orderToUpdate.setStateOrder(StateOrder.DISPATCHED);
-                return ResponseEntity.badRequest().body("Order is already dispatched");
-            } else if (orderToUpdate.getStateOrder().equals(StateOrder.SENT)) {
-                orderToUpdate.setStateOrder(StateOrder.SENT);
-                return ResponseEntity.badRequest().body("Order is already sent");
-            } else if (orderToUpdate.getStateOrder().equals(StateOrder.DELIVERED)) {
-                orderToUpdate.setStateOrder(StateOrder.DELIVERED);
-                return ResponseEntity.badRequest().body("Order is already delivered");
+            Optional<Order> order = orderRepository.findById(id);
+            if(!order.isPresent()) {
+                return ResponseEntity.badRequest().body("Order not found");
+            }else{
+                Order orderToUpdate = order.get();
+                if (orderToUpdate.getStateOrder().equals(StateOrder.CANCELLED)) {
+                    orderToUpdate.setStateOrder(StateOrder.CANCELLED);
+                    return ResponseEntity.badRequest().body("Order is already cancelled");
+                } else if (orderToUpdate.getStateOrder().equals(StateOrder.DISPATCHED)) {
+                    orderToUpdate.setStateOrder(StateOrder.DISPATCHED);
+                    return ResponseEntity.badRequest().body("Order is already dispatched");
+                } else if (orderToUpdate.getStateOrder().equals(StateOrder.SENT)) {
+                    orderToUpdate.setStateOrder(StateOrder.SENT);
+                    return ResponseEntity.badRequest().body("Order is already sent");
+                } else if (orderToUpdate.getStateOrder().equals(StateOrder.DELIVERED)) {
+                    orderToUpdate.setStateOrder(StateOrder.DELIVERED);
+                    return ResponseEntity.badRequest().body("Order is already delivered");
+                }
+                orderRepository.save(orderToUpdate);
+                return ResponseEntity.ok("Order updated");
             }
-            orderRepository.save(orderToUpdate);
-            return ResponseEntity.ok("Order updated");
+          
         }
     }
 

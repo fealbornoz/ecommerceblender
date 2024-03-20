@@ -25,9 +25,6 @@ public class Seller {
     @Column(name = "lastName", columnDefinition = "VARCHAR(15)")
     private String lastName;
 
-    @Column(name = "email", columnDefinition = "VARCHAR(20)")
-    private String email;
-
     @Column(name = "isActive", columnDefinition = "BOOLEAN")
     private Boolean isActive;
 
@@ -46,7 +43,6 @@ public class Seller {
     public Seller(SellerDTO sellerDTO) {
         this.name = sellerDTO.getName();
         this.lastName = sellerDTO.getLastName();
-        this.email = sellerDTO.getEmail();
         this.isActive = true;
         this.paymentMethods = new HashSet<>();
     }

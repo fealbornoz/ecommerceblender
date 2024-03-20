@@ -54,17 +54,23 @@ public class PersonalizationController {
 
 
     @DeleteMapping("/{id}")
-    public @ResponseBody ResponseEntity<String> deletePersonalization(@PathVariable Long id) {
+    public @ResponseBody ResponseEntity<String> deletePersonalization(@PathVariable("id") Long id) {
 
         if (id == null) {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("id is required");
         } else {
             Optional<Personalization> personalizationToDelete = personalizationRepository.findById(id);
-            if (personalizationToDelete.isPresent()) {
-                personalizationRepository.delete(personalizationToDelete.get());
-                return ResponseEntity.status(HttpStatus.SC_OK).body("Personalization deleted");
-            } else {
+            if (!personalizationToDelete.isPresent()) {
                 return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("Personalization not found");
+            } else {
+                Personalization personalization = personalizationToDelete.get();
+                if(personalization != null){
+                    personalizationRepository.delete(personalization);
+                    return ResponseEntity.status(HttpStatus.SC_OK).body("Personalization deleted");
+                }else{
+                    return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("Failed to delete Personalization");
+                }
+               
             }
         }
     }

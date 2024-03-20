@@ -24,7 +24,7 @@ public class ItemController {
         } else {
             Optional<Item> item = itemRepository.findById(idItem);
             if (!item.isPresent()) {
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.badRequest().body("Item not found");
             } else {
                 itemRepository.delete(item.get());
                 return ResponseEntity.ok("Item deleted");

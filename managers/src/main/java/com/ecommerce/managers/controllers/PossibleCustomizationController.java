@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 import com.ecommerce.managers.models.PossibleCustomization;
-import com.ecommerce.managers.repositories.CustomizationTypeRepository;
+/* import com.ecommerce.managers.repositories.CustomizationTypeRepository; */
 import com.ecommerce.managers.repositories.PossibleCustomizationRepository;
 
 @RestController
@@ -17,8 +17,8 @@ public class PossibleCustomizationController {
     @Autowired
     private PossibleCustomizationRepository possibleCustomizationRepository;
 
-    @Autowired
-    private CustomizationTypeRepository customizationTypeRepository;
+/*     @Autowired
+    private CustomizationTypeRepository customizationTypeRepository; */
 
     /* @PostMapping("/")
     public @ResponseBody ResponseEntity<String> createPossibleCustomization(

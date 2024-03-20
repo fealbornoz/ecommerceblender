@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -54,7 +53,7 @@ public class StoreController {
     }
 
     @PatchMapping("/{id}")
-    public @ResponseBody ResponseEntity<String> updateStore(@PathVariable Long id, @RequestBody StoreDTO store) {
+    public @ResponseBody ResponseEntity<String> updateStore(@PathVariable("id") Long id, @RequestBody StoreDTO store) {
 
         if (id == null || store.getName() == null) {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("id and name are required");

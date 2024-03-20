@@ -11,5 +11,4 @@ import lombok.Setter;
 public class SellerDTO {
     String name;
     String lastName;
-    String email;
 }

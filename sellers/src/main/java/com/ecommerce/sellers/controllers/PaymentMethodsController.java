@@ -21,46 +21,48 @@ import com.ecommerce.sellers.repositories.PaymentMethodRepository;
 @RequestMapping("/paymentMethods")
 public class PaymentMethodsController {
 
-    
     @Autowired
     private PaymentMethodRepository paymentMethodRepository;
 
-
-
     @PatchMapping("/{id}")
-    public @ResponseBody ResponseEntity<String> updatePaymentMethod(@PathVariable Long id, @RequestBody PaymentMethodDTO paymentMethodDTO) {
+    public @ResponseBody ResponseEntity<String> updatePaymentMethod(@PathVariable("id") Long id,
+            @RequestBody PaymentMethodDTO paymentMethodDTO) {
 
-        if (id == null || paymentMethodDTO == null) {
+        if (id == null || paymentMethodDTO.getName() == null){
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("id and paymentMethodDTO are required");
         } else {
             Optional<PaymentMethod> paymentMethodToUpdate = paymentMethodRepository.findById(id);
-            if (paymentMethodToUpdate.isPresent()) {
-                paymentMethodToUpdate.get().setName(paymentMethodDTO.getName());
-                paymentMethodRepository.save(paymentMethodToUpdate.get());
-                return ResponseEntity.status(HttpStatus.SC_OK).body("PaymentMethod updated");
-            } else {
+            if (!paymentMethodToUpdate.isPresent()) {
                 return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("PaymentMethod not found");
+            } else {
+                PaymentMethod paymentMethod = paymentMethodToUpdate.get();
+                paymentMethod.setName(paymentMethodDTO.getName());
+                paymentMethodRepository.save(paymentMethod);
+                return ResponseEntity.status(HttpStatus.SC_OK).body("PaymentMethod updated");
             }
         }
     }
 
-
     @DeleteMapping("/{id}")
-    public @ResponseBody ResponseEntity<String> deletePaymentMethod(@PathVariable Long id) {
+    public @ResponseBody ResponseEntity<String> deletePaymentMethod(@PathVariable("id") Long id) {
 
         if (id == null) {
             return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("id is required");
         } else {
             Optional<PaymentMethod> paymentMethodToDelete = paymentMethodRepository.findById(id);
-            if (paymentMethodToDelete.isPresent()) {
-                paymentMethodRepository.delete(paymentMethodToDelete.get());
-                return ResponseEntity.status(HttpStatus.SC_OK).body("PaymentMethod deleted");
-            } else {
+            if (!paymentMethodToDelete.isPresent()) {
                 return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("PaymentMethod not found");
+
+            } else {
+                PaymentMethod paymentMethod = paymentMethodToDelete.get();
+                if (paymentMethod != null) {
+                    paymentMethodRepository.delete(paymentMethod);
+                    return ResponseEntity.status(HttpStatus.SC_OK).body("PaymentMethod deleted");
+                } else {
+                    return ResponseEntity.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).body("Failed to delete PaymentMethod");
+                }
             }
         }
     }
-
-   
 
 }

@@ -3,6 +3,8 @@ package com.ecommerce.managers.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecommerce.managers.dtos.ManagerDTO;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,9 +30,9 @@ public class Manager {
 
 
 
-     public Manager(String name, String lastName ){
-        this.name = name;
-        this.lastName = lastName;
+     public Manager(ManagerDTO managerDTO){
+        this.name = managerDTO.getName();
+        this.lastName = managerDTO.getLastName();
         this.productsBase = new ArrayList<>();
     }
 
